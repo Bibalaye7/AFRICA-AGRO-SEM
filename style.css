@@ -1,0 +1,136 @@
+body{
+margin: 0;
+padding: 0;
+}
+
+h1{
+text-align: center;
+font-family: 'playerfair Display', serif;
+font-size: 2.5rem;
+color: #3A7D44;
+font-style: italic;
+
+}
+
+h2{
+  text-align: center;
+font-family: 'Montserrat', sans-serif;
+font-size: 2rem;
+color: #5D4037;
+font-weight: 700;
+
+}
+
+.paragraphe{
+  display:flex;
+  gap: 16px;
+  margin-left: 40px;
+  margin-right: 40px;
+  font-family: 'popins', sans-serif;
+  font-size: 1rem;
+  color: #5D4037;
+  line-height: 1.6em;
+  margin-bottom: 50px;
+}
+
+.produits{
+  display:flex;
+  gap:  16px;
+  margin-left: 40px;
+  margin-right: 40px;
+
+}
+
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    align-items: center;
+    margin-top:auto;
+}
+
+header{
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: white;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+  
+  .nav-links a{
+    color: black;
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 15px;
+  }
+  .nav-links a:hover{
+    color: #BF5700;
+  }
+.nav-links li{
+  margin-left: 16px;
+}
+
+#carouselExampleAutoplaying {
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-top: 100px;
+  margin-bottom: 50px;
+}
+.logo-center{
+  text-align: center;
+}
+
+
+footer {
+  background-color: var(--primary-color);
+  color: black;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
+}
+
+
+:root {
+  --primary-color: #4CAF50; /* Vert agricole */
+  --secondary-color: #F1F8E9; /* Vert clair */
+}
+
+.contact h2 {
+  color: var(--primary-color);
+}
+ form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+           
+        }
+
+        form input, form textarea {
+            width: 80%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: var(--primary-color);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+.card:hover{
+  background-color: #4CAF50;
+  
+}
