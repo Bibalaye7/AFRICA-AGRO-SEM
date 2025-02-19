@@ -225,3 +225,169 @@ form {
   grid-template-columns: 1fr;
 }
 }
+ /* Personnalisation supplémentaire */
+ .navbar {
+  padding: 15px 0;
+  background: #28a745 !important; /* Vert agricole */
+}
+.nav-link {
+  font-weight: 500;
+  margin: 0 15px;
+  transition: all 0.3s;
+}
+.nav-link:hover {
+  transform: translateY(-2px);
+  color: #28a745 !important; /* Jaune doré au survol */
+}
+.navbar-toggler {
+  border-color: white;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+@media (max-width: 992px) {
+  .navbar-collapse {
+      background:  white;
+      padding: 20px;
+      margin-top: 15px;
+      margin-left: 270px;
+  }
+  .nav-item {
+    margin: 1px 0;
+}
+}
+
+.paragraphe {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Version desktop - disposition normale */
+.paragraphe p {
+  margin: 15px 0;
+}
+
+/* Version mobile - disposition tableau */
+@media (max-width: 768px) {
+  .paragraphe {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .paragraphe p {
+      display: table-row;
+      border-bottom: 1px solid white;
+      padding: 15px;
+      margin: 0;
+  }
+
+  .paragraphe p::before {
+      content: attr(data-label);
+      display: table-cell;
+      font-weight: bold;
+      padding-right: 15px;
+      width: 30%;
+      vertical-align: top;
+  }
+
+  .paragraphe p span {
+      display: table-cell;
+      width: 70%;
+      vertical-align: top;
+      padding: 15px 0;
+  }
+}
+/* Version desktop */
+.produits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+    .produits .card {
+        display: flex !important;
+        flex-direction: row;
+        align-items: start;
+        width: 100% !important;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .produits .card-img-top {
+        width: 45% !important;
+        height: 200px !important;
+        object-fit: cover;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .produits .card-body {
+        width: 55% !important;
+        padding: 10px !important;
+    }
+
+    .produits .card-text {
+        font-size: 1rem;
+        line-height: 1.4;
+        margin: 0;
+    }
+}
+
+
+  /* Version mobile (tous écrans) */
+  .contact-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 20px;
+      overflow-x: auto;
+      padding: 15px 0;
+  }
+
+  .contact-text, 
+  .contact-form {
+      min-width: 300px;
+      flex: 1;
+  }
+
+  /* Style amélioré pour mobile */
+  @media (max-width: 576px) {
+      .contact-text p {
+          font-size: 0.9rem;
+          line-height: 1.4;
+      }
+      
+      .contact-form input, 
+      .contact-form textarea {
+          padding: 8px;
+          font-size: 0.9rem;
+      }
+  }
+
+  /* Version desktop */
+  @media (min-width: 768px) {
+      .contact-wrapper {
+          justify-content: center;
+          overflow: visible;
+      }
+  }
+
+
+  /* Indicateurs visuels de scroll */
+#info {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
+}
+
+/* Animation au défilement */
+.contact-info, #contactForm {
+  transition: transform 0.3s;
+}
+
+.contact-info:hover, #contactForm:hover {
+  transform: scale(1.02);
+}
+

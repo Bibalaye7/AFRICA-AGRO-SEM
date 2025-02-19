@@ -13,17 +13,50 @@
 <body>
    
   <header>
-    <nav class="navbar">
-      <img src="les_logos/logo-blanc.jpg"  style="width: 90px; height: 90px; z-index: 100px;" alt="logo"  />
-      <ul class="nav-links">
-        <li><a href="">ACCEUIL</a></li>
-        <li><a href="#Nos Produits">PRODUITS</a></li>
-        <li><a href="/a-propos.html">A PROPOS</a></li>
-        <li><a href="#contact">CONTACT</a></li>
-      </ul>
+    <nav class="navbar navbar-expand-lg bg-white fixed-top shadow-sm py-3">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand me-5" href="#">
+                <img src="les_logos/logo-blanc.jpg" 
+                     alt="Logo Africa Agro SEM" 
+                     class="img-fluid"
+                     style="width: 80px; height: auto;">
+            </a>
+
+            <!-- Menu Hamburger Mobile -->
+            <button class="navbar-toggler" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" 
+                    aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Liens Navigation -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark fw-medium" href="index.html">ACCUEIL</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark fw-medium" href="#Nos Produits">PRODUITS</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark fw-medium" href="/a-propos.html">À PROPOS</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark fw-medium" href="#contact">CONTACT</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-  </header>
-  
+</header>
+
+
+
+
   <div id="carouselExampleDark" class="carousel carousel-dark slide">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -67,9 +100,14 @@
     <h2>Bienvenue chez AFRICA AGRO SEM</H2>
 
 <div class="paragraphe">
-<p>Votre partenaire de confiance pour des produits agricoles frais, naturels et de haute qualité ! Spécialisée dans la culture et la récolte des produits issus de terres fertiles du sénégal, notre entreprise s'engage à vous offrir le meilleur de l'agriculture africaine et dans le monde.</p>
-<p>Nous proposons une gamme variée de produis, allant des céréales et légumineuses aux fruis et légumes frais, en passant par des épices et des produits transformés. Chaque récolte est soigneusement sélectionnée pour garantir fraîcheur, saveur et recpect de l'environnement.</p>
-<p>Que vous soyez un particulier, un restaurateur ou un revendeur, AFRICA AGRO SEM est votre source fiable pour des produits sains et durables. Découvrez notre catalogue en ligne, passez vos commandes facilement et laissez-nous vous livrer l'excellence de la terre directement chez vous.</p>
+<p data-label="Présentation :">
+  <span>Votre partenaire de confiance pour des produits agricoles frais, naturels et de haute qualité ! Spécialisée dans la culture et la récolte des produits issus de terres fertiles du sénégal, notre entreprise s'engage à vous offrir le meilleur de l'agriculture africaine et dans le monde.</span>
+</p>
+<p  data-label="Gamme :">
+  <span>Nous proposons une gamme variée de produis, allant des céréales et légumineuses aux fruis et légumes frais, en passant par des épices et des produits transformés. Chaque récolte est soigneusement sélectionnée pour garantir fraîcheur, saveur et recpect de l'environnement.</span>
+</p>
+<p data-label="Cible :">
+  <span>Que vous soyez un particulier, un restaurateur ou un revendeur, AFRICA AGRO SEM est votre source fiable pour des produits sains et durables. Découvrez notre catalogue en ligne, passez vos commandes facilement et laissez-nous vous livrer l'excellence de la terre directement chez vous.</span</p>
 </div>
 
 
@@ -144,17 +182,72 @@
 
 <section id="contact" class="contact">
   <h2>Contactez-nous</h2>
-<div id="info">
-  <p>Envie de manger naturellement la nature ?<br>NOUS CONTACTER <br>Contactez-nous pour reserver votre commande. <br> Appelez-nous ou commandez directement en ligne. <br>Nous avons hâte de vous accueillir ! <br><i class="fa-solid fa-phone">785141058</i><br><i class="fa-regular fa-envelope">youssou@gail.com</i></p>
+  <div id="info">
+      <!-- Partie Texte -->
+      <div class="contact-info">
+          <p>Envie de manger naturellement la nature ?<br>
+          NOUS CONTACTER <br>
+          Contactez-nous pour réserver votre commande.<br>
+          Appelez-nous ou commandez directement en ligne.<br>
+          Nous avons hâte de vous accueillir !<br>
+          <i class="fa-solid fa-phone">785141058</i><br>
+          <i class="fa-regular fa-envelope">youssou@gmail.com</i></p>
+      </div>
 
-  <form id="contactForm">
-      <input type="text" placeholder="Nom Complet" required>
-      <input type="email" placeholder="Adresse Email" required>
-      <textarea placeholder="Votre Message" rows="5" required></textarea>
-      <button type="submit">Envoyer Message</button>
-  </form>
-</div>
+      <!-- Formulaire -->
+      <form id="contactForm">
+          <input type="text" placeholder="Nom Complet" required>
+          <input type="email" placeholder="Adresse Email" required>
+          <textarea placeholder="Votre Message" rows="5" required></textarea>
+          <button type="submit">Envoyer Message</button>
+      </form>
+  </div>
 </section>
+
+<style>
+  /* Version Mobile (horizontal) */
+  @media (max-width: 768px) {
+      #info {
+          display: flex;
+          flex-direction: row;
+          overflow-x: auto;
+          gap: 20px;
+          padding: 15px 0;
+          scroll-snap-type: x mandatory;
+      }
+
+      .contact-info, 
+      #contactForm {
+          flex: 0 0 90%;
+          scroll-snap-align: start;
+          min-width: 300px;
+          padding: 15px;
+          background: #f8f9fa;
+          border-radius: 10px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+
+      #contactForm {
+          min-width: 280px;
+      }
+
+      /* Masquer la barre de défilement */
+      #info::-webkit-scrollbar {
+          display: none;
+      }
+  }
+
+  /* Version Desktop */
+  @media (min-width: 769px) {
+      #info {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+          max-width: 1200px;
+          margin: 0 auto;
+      }
+  }
+</style>
 
 
 <footer>
