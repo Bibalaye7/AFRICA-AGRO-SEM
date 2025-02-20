@@ -9,3 +9,19 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
         const viewportMeta = document.querySelector('meta[name="viewport"]');
         viewportMeta.content = "width=820, initial-scale=1.0";
     });
+
+    function adjustCarouselHeight() {
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const aspectRatio = 9 / 16; // Hauteur/Largeur
+        
+        carouselItems.forEach(item => {
+            const width = item.offsetWidth;
+            item.style.height = `${width * aspectRatio}px`;
+        });
+    }
+    
+    // Appel initial
+    adjustCarouselHeight();
+    
+    // Réajustement au redimensionnement
+    window.addEventListener('resize', adjustCarouselHeight);
