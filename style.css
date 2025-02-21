@@ -133,8 +133,8 @@ margin-top: 50px;
           display:flex ;
             flex-direction: column;
             align-items: center;
-           margin-left: 100px;
-          width: 600px;
+           margin-left: 60px;
+          width: 60px;
         }
 
         form input, form textarea {
@@ -544,6 +544,7 @@ body {
 
 
 
+
 #contactForm button {
   background: #28a745;
   color: white;
@@ -582,3 +583,72 @@ body {
   margin-right: 10px;
   color: #28a745;
 }
+
+
+
+  footer {
+      font-family: Arial, sans-serif;
+      
+  }
+  
+  footer a {
+      transition: all 0.3s ease;
+      
+  }
+  
+  footer a:hover {
+      color: #28a745 !important;
+      transform: translateX(5px);
+  }
+  
+  .social-links a {
+      display: inline-block;
+      transition: transform 0.3s ease;
+  }
+  
+  .social-links a:hover {
+      transform: translateY(-3px);
+  }
+  
+  @media (max-width: 768px) {
+      footer .col-md-4 {
+          margin-bottom: 2rem;
+          text-align: center !important;
+      }
+      
+      footer .text-md-start, 
+      footer .text-md-end {
+          text-align: center !important;
+      }
+      
+      .social-links {
+          justify-content: center !important;
+      }
+  }
+
+
+
+  /* Suppression des traits */
+  .contact-card,
+  #contactForm {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  footer hr {
+    display: none !important;
+  }
+
+  footer .col-md-4 {
+    border-right: none !important;
+  }
+
+  /* Ajustement espacement */
+  .contact-wrapper {
+    gap: 40px;
+    padding: 0;
+  }
+
+  footer .row {
+    border-top: none !important;
+  }
