@@ -20,8 +20,4 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
         });
     }
     
-    // Appel initial
-    adjustCarouselHeight();
-    
-    // Réajustement au redimensionnement
-    window.addEventListener('resize', adjustCarouselHeight);
+  
