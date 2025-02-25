@@ -101,6 +101,16 @@ header{
   margin-bottom: 50px;
 }
 
+/* Dans votre fichier style.css */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optionnel - Style visuel pour les sections cibles */
+section:target {
+  padding-top: 80px; /* Ajustez selon la hauteur de votre header */
+  margin-top: -80px;
+}
 
 footer {
   background-color: var(--primary-color);
@@ -700,3 +710,83 @@ body {
             margin-bottom: 0;
         }
     }
+
+ 
+
+  .nav-links-internal {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.nav-links-internal a {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white !important;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.nav-links-internal a:hover {
+        transform: translateY(-3px);
+    }
+
+      /* Styles généraux */
+      .descent {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        margin-top: 10%;
+    }
+
+      /* Conteneur pour chaque section */
+      .content-section {
+        margin: 40px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: center;
+    }
+
+     /* Images responsives */
+     .section-image {
+      width: 10000px;
+      height: 500px;
+      max-width: 100%;
+    margin-left: 40px;
+    margin-right: 10px;
+      
+  }
+
+    /* Media Queries pour mobile */
+    @media (max-width: 768px) {
+      .content-section {
+          flex-direction: column;
+          margin: 20px 0;
+      }
+      
+      .section-image {
+          max-height: 250px;
+      }
+      
+      h2 {
+        margin-top: 100%;
+          font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .descent {
+        padding: 10px;
+    }
+    
+    .section-image {
+        max-height: 200px;
+    }
+}
