@@ -738,7 +738,7 @@ body {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-        margin-top: 10%;
+        margin-top: 24%;
     }
 
       /* Conteneur pour chaque section */
@@ -754,9 +754,9 @@ body {
      .section-image {
       width: 10000px;
       height: 500px;
-      max-width: 100%;
+      max-width: 95%;
     margin-left: 40px;
-    margin-right: 10px;
+    margin-right: 40px;
       
   }
 
@@ -790,3 +790,5 @@ body {
         max-height: 200px;
     }
 }
+
+
