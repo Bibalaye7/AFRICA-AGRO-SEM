@@ -758,6 +758,34 @@ body {
     margin-right: 40px;
       
   }
+  /* Effet zoom sur les images */
+#partenariats .card img {
+  transition: transform 0.3s ease;
+}
+
+#partenariats .card img:hover {
+  transform: scale(1.05);
+}
+
+/* Effet hover sur les cartes */
+#partenariats .card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#partenariats .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 128, 0, 0.2);
+}
+
+/* Harmonisation des images Partenariats */
+#partenariats .card img {
+  width: 100%;                /* occupe toute la largeur de la carte */
+  height: 220px;              /* même hauteur pour toutes */
+  object-fit: cover;          /* recadre sans déformer */
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
 
     /* Media Queries pour mobile */
     @media (max-width: 768px) {
