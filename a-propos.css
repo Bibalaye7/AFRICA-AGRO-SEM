@@ -1,0 +1,921 @@
+body{
+margin: 0;
+padding: 0;
+
+}
+
+*{
+  font-family: sans-serif;
+}
+
+h1{
+  color: #3A7D44;
+text-align: center;
+font-size: 2.5rem;
+margin-bottom: 50px;
+margin-top: 50px;
+}
+
+h2{
+color:  #3A7D44;
+text-align: center;
+font-size: 2rem;
+font-weight: 700;
+margin-bottom: 50px;
+margin-top: 50px;
+}
+
+.paragraphe{
+  display:flex;
+  gap: 16px;
+  margin-left: 40px;
+  margin-right: 40px;
+  font-size: 1rem;
+  color: #5D4037;
+  line-height: 1.6em;
+  margin-bottom: 50px;
+}
+
+.produits{
+  display:flex;
+  gap:  16px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.celeales{
+    display:flex;
+    gap:  16px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    align-items: center;
+    margin-top:auto;
+}
+
+header{
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: white;
+}
+.card-text{
+  font-size: small;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+  
+  .nav-links a{
+   color: #5D4037;;
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 15px;
+  }
+  .nav-links a:hover{
+    color: #4CAF50;
+  }
+.nav-links li{
+  margin-left: 16px;
+}
+
+#carouselExampleDark {
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-top: 100px;
+  margin-bottom: 50px;
+}
+.logo-center{
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+/* Dans votre fichier style.css */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optionnel - Style visuel pour les sections cibles */
+section:target {
+  padding-top: 80px; /* Ajustez selon la hauteur de votre header */
+  margin-top: -80px;
+}
+
+footer {
+  background-color: var(--primary-color);
+  color: black;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
+}
+
+
+:root {
+  --primary-color: #4CAF50; /* Vert agricole */
+  --secondary-color: #F1F8E9; /* Vert clair */
+}
+
+.contact h2 {
+  color: var(--primary-color);
+  margin-bottom: 50px;
+margin-top: 50px;
+}
+ #info {
+            display:flex ;
+            flex-direction: row;
+            align-items: center;
+           margin-left: 100px;
+           gap: 10px;
+        }
+
+        form{
+          display:flex ;
+            flex-direction: column;
+            align-items: center;
+           margin-left: 60px;
+          width: 60px;
+        }
+
+        form input, form textarea {
+            width: 80%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: var(--primary-color);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+
+.card:hover{
+  background-color: #4CAF50;
+  
+}
+marquee{
+  font-size: 1.5em;
+}
+
+.descent{
+ margin-top : 100px;
+}
+p{
+  margin-left: 40px;
+  margin-right: 40px;
+}
+.card-text{
+color: #5D4037;
+}
+
+  /* Ajouts CSS pour la responsive */
+  .navbar {
+    padding: 15px;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+.paragraphe {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.produits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.card {
+  width: 100% !important;
+  margin: 10px 0;
+}
+#info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  padding: 20px;
+}
+form {
+  min-width: 300px;
+  max-width: 500px;
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .navbar {
+      flex-direction: column;
+      align-items: center;
+  }
+  .nav-links {
+    flex-direction: column;
+    text-align: center;
+}
+.carousel-caption h5 {
+  font-size: 1.5rem !important;
+}
+.produits {
+  grid-template-columns: 1fr;
+}
+}
+ /* Personnalisation supplémentaire */
+ .navbar {
+  padding: 15px 0;
+  background: #28a745 !important; /* Vert agricole */
+}
+.nav-link {
+  font-weight: 500;
+  margin: 0 15px;
+  transition: all 0.3s;
+}
+.nav-link:hover {
+  transform: translateY(-2px);
+  color: #28a745 !important; /* Jaune doré au survol */
+}
+.navbar-toggler {
+  border-color: white;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+@media (max-width: 992px) {
+  .navbar-collapse {
+      background:  white;
+      padding: 20px;
+      margin-top: 15px;
+      margin-left: 270px;
+  }
+  .nav-item {
+    margin: 1px 0;
+}
+}
+
+.paragraphe {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Version desktop - disposition normale */
+.paragraphe p {
+  margin: 15px 0;
+}
+
+/* Version mobile - disposition tableau */
+@media (max-width: 768px) {
+  .paragraphe {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .paragraphe p {
+      display: table-row;
+      border-bottom: 1px solid white;
+      padding: 15px;
+      margin: 0;
+  }
+
+  .paragraphe p::before {
+      content: attr(data-label);
+      display: table-cell;
+      font-weight: bold;
+      padding-right: 15px;
+      width: 30%;
+      vertical-align: top;
+  }
+
+  .paragraphe p span {
+      display: table-cell;
+      width: 70%;
+      vertical-align: top;
+      padding: 15px 0;
+  }
+}
+/* Version desktop */
+.produits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+    .produits .card {
+        display: flex !important;
+        flex-direction: row;
+        align-items: start;
+        width: 100% !important;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .produits .card-img-top {
+        width: 45% !important;
+        height: 200px !important;
+        object-fit: cover;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .produits .card-body {
+        width: 55% !important;
+        padding: 10px !important;
+    }
+
+    .produits .card-text {
+        font-size: 1rem;
+        line-height: 1.4;
+        margin: 0;
+    }
+}
+
+
+  /* Version mobile (tous écrans) */
+  .contact-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 20px;
+      overflow-x: auto;
+      padding: 15px 0;
+  }
+
+  .contact-text, 
+  .contact-form {
+      min-width: 300px;
+      flex: 1;
+
+  }
+
+  /* Style amélioré pour mobile */
+  @media (max-width: 576px) {
+      .contact-text p {
+          font-size: 0.9rem;
+          line-height: 1.4;
+      }
+      
+      .contact-form input, 
+      .contact-form textarea {
+          padding: 8px;
+          font-size: 0.9rem;
+      }
+  }
+
+  /* Version desktop */
+  @media (min-width: 768px) {
+      .contact-wrapper {
+          justify-content: center;
+          overflow: visible;
+      }
+  }
+
+
+  /* Indicateurs visuels de scroll */
+#info {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
+}
+
+/* Animation au défilement */
+.contact-info, #contactForm {
+  transition: transform 0.3s;
+}
+
+.contact-info:hover, #contactForm:hover {
+  transform: scale(1.02);
+}
+
+  /* Règles spécifiques pour les écrans < 820px (iPad Air en portrait) */
+  @media (max-width: 820px) {
+    /* Navigation */
+    .navbar {
+        padding: 10px 0;
+    }
+    
+    .nav-links {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+     /* Carousel */
+     .carousel-item {
+      min-height: 400px;
+  }
+
+  .carousel-caption h5 {
+      font-size: 1.8rem !important;
+  }
+
+  /* Section Produits */
+  .produits {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+  }
+  .card {
+    width: 100% !important;
+    margin: 0;
+}
+
+/* Section Contact */
+#info {
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* Ajustements typographie */
+h2 {
+    font-size: 1.5rem;
+}
+p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+}
+
+/* Règles spécifiques pour les écrans < 430px (téléphones) */
+@media (max-width: 430px) {
+.produits {
+  grid-template-columns: 1fr;
+}
+
+.carousel-item {
+  min-height: 300px;
+}
+.carousel-caption h5 {
+  font-size: 1.4rem !important;
+  padding: 0 10px;
+}
+}
+/* Rendre tous les éléments fluides */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Empêcher les débordements horizontaux */
+body {
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+/* Ajustements spécifiques pour le texte */
+.paragraphe {
+  column-width: 300px;
+  column-gap: 40px;
+}
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Ratio 16:9 */
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+    .produits {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+    }
+    
+    .card-img-container {
+        padding-top: 100%; /* Carré sur mobile */
+    }
+}
+
+
+/* Conteneur des cartes */
+.produits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
+
+  /* Style des cartes */
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+  /* Structure commune aux cartes et au formulaire */
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+ /* Style cohérent avec les cartes produits */
+ .contact-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: transform 0.3s ease;
+}
+
+
+.contact-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Adaptation du formulaire */
+#contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+
+
+#contactForm button {
+  background: #28a745;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .contact-wrapper {
+      grid-template-columns: 1fr;
+      gap: 20px;
+  }
+
+  .contact-card {
+      padding: 20px;
+  }
+
+  #contactForm input,
+  #contactForm textarea {
+      font-size: 0.9rem;
+  }
+}
+
+
+/* Alignement texte */
+.contact-text {
+  line-height: 1.6;
+  color: #444;
+}
+
+.contact-text i {
+  margin-right: 10px;
+  color: #28a745;
+}
+
+
+
+  footer {
+      font-family: Arial, sans-serif;
+      
+  }
+  
+  footer a {
+      transition: all 0.3s ease;
+      
+  }
+  
+  footer a:hover {
+      color: #28a745 !important;
+      transform: translateX(5px);
+  }
+  
+  .social-links a {
+      display: inline-block;
+      transition: transform 0.3s ease;
+  }
+  
+  .social-links a:hover {
+      transform: translateY(-3px);
+  }
+  
+  @media (max-width: 768px) {
+      footer .col-md-4 {
+          margin-bottom: 2rem;
+          text-align: center !important;
+      }
+      
+      footer .text-md-start, 
+      footer .text-md-end {
+          text-align: center !important;
+      }
+      
+      .social-links {
+          justify-content: center !important;
+      }
+  }
+
+
+
+  /* Suppression des traits */
+  .contact-card,
+  #contactForm {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  footer hr {
+    display: none !important;
+  }
+
+  footer .col-md-4 {
+    border-right: none !important;
+  }
+
+  /* Ajustement espacement */
+  .contact-wrapper {
+    gap: 40px;
+    padding: 0;
+  }
+
+  footer .row {
+    border-top: none !important;
+  }
+
+   /* Réduction de la hauteur du carousel */
+   .carousel-container {
+    max-height: 60vh;
+    overflow: hidden;
+}
+
+/* Adaptation texte et contraste */
+.carousel-caption {
+  color: #fff !important;
+  padding: 15px;
+  border-radius: 10px;
+  bottom: 20%;
+  left: 5%;
+  right: 5%;
+}
+
+.carousel-caption h5 {
+  font-size: 1.9rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-caption p {
+  font-size: 1.4rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+ /* Responsive mobile */
+ @media (max-width: 768px) {
+  .carousel-container {
+      max-height: 50vh;
+  }
+  
+  .carousel-caption {
+      bottom: 10%;
+      padding: 10px;
+  }
+  
+  .carousel-caption h5 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+  }
+
+    .carousel-caption p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+    }
+
+ 
+
+  .nav-links-internal {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.nav-links-internal a {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white !important;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.nav-links-internal a:hover {
+        transform: translateY(-3px);
+    }
+
+      /* Styles généraux */
+      .descent {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        margin-top: 24%;
+    }
+
+      /* Conteneur pour chaque section */
+      .content-section {
+        margin: 40px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: center;
+    }
+
+     /* Images responsives */
+     .section-image {
+      width: 10000px;
+      max-width: 95%;
+    margin-left: 40px;
+    margin-right: 40px;
+      
+  }
+  /* Effet zoom sur les images */
+#partenariats .card img {
+  transition: transform 0.3s ease;
+}
+
+#partenariats .card img:hover {
+  transform: scale(1.05);
+}
+
+/* Effet hover sur les cartes */
+#partenariats .card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#partenariats .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 128, 0, 0.2);
+}
+
+/* Harmonisation des images Partenariats */
+#partenariats .card img {
+  width: 100%;                /* occupe toute la largeur de la carte */
+  height: 220px;              /* même hauteur pour toutes */
+  object-fit: cover;          /* recadre sans déformer */
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Section Campagne Agricole */
+#campagne-agricole-admin {
+    background-color: #f8f9fa;
+    padding: 60px 0;
+}
+
+#campagne-agricole-admin h2 {
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+/* Formulaire Admin */
+#admin-form {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+#admin-form:hover {
+    transform: translateY(-3px);
+}
+
+#admin-form h5 {
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#admin-form .form-label {
+    font-weight: 500;
+}
+
+#admin-form .form-control,
+#admin-form .form-select {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+#admin-form button {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 25px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+#admin-form button:hover {
+    background-color: #218838;
+}
+
+/* Tableau récapitulatif */
+#campagneTable {
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+#campagneTable th {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+}
+
+#campagneTable td {
+    text-align: center;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Responsive small devices */
+@media (max-width: 768px) {
+    #admin-form {
+        padding: 20px;
+    }
+
+    #admin-form button {
+        width: 100%;
+    }
+
+    #campagneTable th,
+    #campagneTable td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+/* Ajout léger hover pour le tableau */
+#campagneTable tbody tr:hover {
+    background-color: #e8f5e9;
+    transition: background 0.3s ease;
+}
+
+
+
+    /* Media Queries pour mobile */
+    @media (max-width: 768px) {
+      .content-section {
+          flex-direction: column;
+          margin: 20px 0;
+      }
+      
+      .section-image {
+          max-height: 250px;
+      }
+      
+      h2 {
+        margin-top: 100%;
+          font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .descent {
+        padding: 10px;
+    }
+    
+    .section-image {
+        max-height: 200px;
+    }
+}
+
+

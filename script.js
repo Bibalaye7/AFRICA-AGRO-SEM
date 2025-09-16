@@ -19,5 +19,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
             item.style.height = `${width * aspectRatio}px`;
         });
     }
+
+    
     
   
