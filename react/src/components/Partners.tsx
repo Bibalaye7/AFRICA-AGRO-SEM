@@ -1,10 +1,6 @@
 import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
 
 const Partners = () => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
 
   const partners = [
     {
@@ -25,11 +21,12 @@ const Partners = () => {
   ]
 
   return (
-    <section id="partenaires" className="py-20 bg-gradient-to-b from-green-50 to-white" ref={ref}>
+    <section id="partenaires" className="py-20 bg-gradient-to-b from-green-50 to-white">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
@@ -44,7 +41,8 @@ const Partners = () => {
             <motion.div
               key={partner.title}
               initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow"
             >
@@ -68,7 +66,8 @@ const Partners = () => {
         {/* Section Nouveaux Partenaires */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-20 max-w-6xl mx-auto"
         >
@@ -121,7 +120,8 @@ const Partners = () => {
                 alt={`Partenaire ${index + 1}`}
                 className="rounded-xl shadow-lg w-full h-auto object-contain"
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
               />
