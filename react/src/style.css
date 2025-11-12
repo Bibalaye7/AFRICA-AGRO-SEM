@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-agro-light hover:bg-agro-green text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-agro-green text-center mb-8;
+  }
+  
+  .card-product {
+    @apply bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden;
+  }
+}
