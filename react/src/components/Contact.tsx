@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 
 const Contact = () => {
   const ref = useRef(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
   const [formData, setFormData] = useState({
     nom: '',
@@ -13,46 +14,83 @@ const Contact = () => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   // Configuration EmailJS
+  // IMPORTANT: Vérifiez ces IDs dans votre dashboard EmailJS: https://dashboard.emailjs.com/admin
   const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_6c7w5uj'
-  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_6eb3eyt'
+  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_28ecf18'
   const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'ZuuXzMtP5NNOYwuMI'
+  
+  // Debug: Afficher les IDs utilisés (à retirer en production)
+  useEffect(() => {
+    console.log('EmailJS Config:', {
+      serviceId: EMAILJS_SERVICE_ID,
+      templateId: EMAILJS_TEMPLATE_ID,
+      publicKey: EMAILJS_PUBLIC_KEY ? 'Configuré' : 'Manquant'
+    })
+  }, [])
+
+  // Initialiser EmailJS au chargement
+  useEffect(() => {
+    emailjs.init(EMAILJS_PUBLIC_KEY)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus('idle')
-
+    setErrorMessage('')
 
     try {
-      // Envoyer l'email via EmailJS
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name: formData.nom,
-          from_email: formData.email,
-          message: formData.message,
-          to_email: 'africaagrosem@gmail.com',
-        },
-        EMAILJS_PUBLIC_KEY
-      )
-
-      setSubmitStatus('success')
-      setFormData({ nom: '', email: '', message: '' })
+      // Utiliser sendForm pour une meilleure compatibilité
+      if (formRef.current) {
+        const result = await emailjs.sendForm(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          formRef.current,
+          EMAILJS_PUBLIC_KEY
+        )
+        
+        console.log('Email envoyé avec succès:', result)
+        setSubmitStatus('success')
+        setFormData({ nom: '', email: '', message: '' })
+        
+        // Réinitialiser le statut après 5 secondes
+        setTimeout(() => {
+          setSubmitStatus('idle')
+        }, 5000)
+      } else {
+        throw new Error('Formulaire non trouvé')
+      }
+    } catch (error: any) {
+      console.error('Erreur complète EmailJS:', error)
+      console.error('Service ID:', EMAILJS_SERVICE_ID)
+      console.error('Template ID:', EMAILJS_TEMPLATE_ID)
       
-      // Réinitialiser le statut après 5 secondes
-      setTimeout(() => {
-        setSubmitStatus('idle')
-      }, 5000)
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error)
+      // Afficher le message d'erreur détaillé
+      let errorMsg = 'Erreur lors de l\'envoi. Veuillez réessayer.'
+      
+      if (error?.text) {
+        errorMsg = error.text
+      } else if (error?.message) {
+        errorMsg = error.message
+      } else if (error?.status) {
+        errorMsg = `Erreur ${error.status}: ${error.text || 'Vérifiez votre configuration EmailJS'}`
+      }
+      
+      // Message spécifique pour Template ID non trouvé
+      if (errorMsg.includes('template') || errorMsg.includes('Template ID')) {
+        errorMsg = 'Template ID introuvable. Vérifiez votre configuration dans le dashboard EmailJS: https://dashboard.emailjs.com/admin/templates'
+      }
+      
+      setErrorMessage(errorMsg)
       setSubmitStatus('error')
       
       // Réinitialiser le statut après 5 secondes
       setTimeout(() => {
         setSubmitStatus('idle')
+        setErrorMessage('')
       }, 5000)
     } finally {
       setIsSubmitting(false)
@@ -114,6 +152,7 @@ const Contact = () => {
 
           {/* Formulaire */}
           <motion.form
+            ref={formRef}
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -121,13 +160,13 @@ const Contact = () => {
             className="bg-white p-8 rounded-xl shadow-lg space-y-6"
           >
             <div>
-              <label htmlFor="nom" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="from_name" className="block text-sm font-semibold text-gray-700 mb-2">
                 Nom Complet
               </label>
               <input
                 type="text"
-                id="nom"
-                name="nom"
+                id="from_name"
+                name="from_name"
                 value={formData.nom}
                 onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
                 required
@@ -137,13 +176,13 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="from_email" className="block text-sm font-semibold text-gray-700 mb-2">
                 Adresse Email
               </label>
               <input
                 type="email"
-                id="email"
-                name="email"
+                id="from_email"
+                name="from_email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
@@ -186,7 +225,7 @@ const Contact = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm"
               >
-                ✗ Erreur lors de l'envoi. Veuillez réessayer ou nous contacter directement.
+                ✗ {errorMessage || 'Erreur lors de l\'envoi. Veuillez réessayer ou nous contacter directement.'}
               </motion.div>
             )}
 

@@ -48,11 +48,11 @@ const Partners = () => {
               transition={{ duration: 0.5, delay: index * 0.2 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow"
             >
-              <div className="relative h-auto lg:h-48 overflow-hidden">
+              <div className="relative h-auto overflow-hidden">
                 <motion.img
                   src={partner.image}
                   alt={partner.title}
-                  className="w-full h-auto lg:h-full object-contain lg:object-cover"
+                  className="w-full h-auto object-contain"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.3 }}
                 />
@@ -79,7 +79,7 @@ const Partners = () => {
             <motion.img
               src="/images/Signature officielle de la convention.jpg"
               alt="Signature partenariat PRODAC et Africa Agro Sem"
-              className="rounded-xl shadow-xl w-full h-auto object-contain lg:object-cover"
+              className="rounded-xl shadow-xl w-full h-auto object-contain"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             />
@@ -119,7 +119,7 @@ const Partners = () => {
                 key={index}
                 src={img}
                 alt={`Partenaire ${index + 1}`}
-                className="rounded-xl shadow-lg w-full h-auto lg:h-64 object-contain lg:object-cover"
+                className="rounded-xl shadow-lg w-full h-auto object-contain"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
