@@ -254,12 +254,13 @@
       
 <!-- Carte de formulaire -->
         <div class="contact-card">
-            <form id="contactForm">
-                <input type="text" placeholder="Nom Complet" required>
-                <input type="email" placeholder="Adresse Email" required>
-                <textarea placeholder="Votre Message" rows="5" required></textarea>
-                <button type="submit">Envoyer Message</button>
-            </form>
+          <form id="contactForm" action="contact.php" method="POST">
+            <input type="text" name="nom" placeholder="Nom Complet" required>
+            <input type="email" name="email" placeholder="Adresse Email" required>
+            <textarea name="message" placeholder="Votre Message" rows="5" required></textarea>
+            <button type="submit">Envoyer Message</button>
+          </form>
+
         </div>
     </div>
 </section>
