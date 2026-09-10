@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAuth } from '../contexts/AuthContext'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
+  const { user, signOut } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +56,11 @@ const Header = () => {
       return
     }
     scrollToSection('#contact')
+    setIsMobileMenuOpen(false)
+  }
+
+  const handleSignOut = async () => {
+    await signOut()
     setIsMobileMenuOpen(false)
   }
 
@@ -114,8 +121,20 @@ const Header = () => {
             )}
           </div>
 
-          {/* Bouton "Nous contacter" à droite */}
+          {/* Actions visiteur et contact à droite */}
           <div className="hidden lg:flex items-center flex-shrink-0 mr-2 lg:mr-4">
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                className="mr-4 text-sm font-medium text-gray-600 hover:text-agro-green transition-colors"
+              >
+                Déconnexion
+              </button>
+            ) : (
+              <Link to="/auth" className="mr-4 text-sm font-medium text-agro-green hover:text-agro-light transition-colors">
+                Se connecter
+              </Link>
+            )}
             <motion.button
               onClick={handleContactClick}
               className="px-6 py-2.5 text-sm font-medium text-agro-green border-2 border-agro-green rounded-lg hover:bg-agro-green hover:text-white transition-all duration-300"
@@ -175,6 +194,15 @@ const Header = () => {
             >
               Nous contacter
             </motion.button>
+            {user ? (
+              <button onClick={handleSignOut} className="block w-full text-left text-sm font-medium text-gray-600 hover:text-agro-green py-2">
+                Déconnexion
+              </button>
+            ) : (
+              <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)} className="block text-sm font-medium text-agro-green hover:text-agro-light py-2">
+                Se connecter
+              </Link>
+            )}
           </motion.div>
         )}
       </nav>

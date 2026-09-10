@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
+import { supabase } from '../lib/supabase'
 
 const Contact = () => {
   const ref = useRef(null)
@@ -43,6 +44,20 @@ const Contact = () => {
     setErrorMessage('')
 
     try {
+      let databaseError = ''
+      if (supabase) {
+        try {
+          const { error } = await supabase.from('contact_messages').insert({
+            name: formData.nom,
+            email: formData.email,
+            message: formData.message,
+          })
+          if (error) databaseError = error.message
+        } catch (error) {
+          databaseError = error instanceof Error ? error.message : 'Base de données inaccessible.'
+        }
+      }
+
       // Utiliser sendForm pour une meilleure compatibilité
       if (formRef.current) {
         const result = await emailjs.sendForm(
@@ -55,6 +70,9 @@ const Contact = () => {
         console.log('Email envoyé avec succès:', result)
         setSubmitStatus('success')
         setFormData({ nom: '', email: '', message: '' })
+        if (databaseError) {
+          setErrorMessage('E-mail envoyé, mais le message n’a pas été enregistré dans Supabase. Vérifiez l’URL Supabase.')
+        }
         
         // Réinitialiser le statut après 5 secondes
         setTimeout(() => {
@@ -216,6 +234,16 @@ const Contact = () => {
                 className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm"
               >
                 ✓ Message envoyé avec succès ! Nous vous répondrons bientôt.
+              </motion.div>
+            )}
+
+            {submitStatus === 'success' && errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-sm"
+              >
+                {errorMessage}
               </motion.div>
             )}
 

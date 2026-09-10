@@ -16,6 +16,7 @@ npm install
 - **Tailwind CSS** - Framework CSS utilitaire
 - **Framer Motion** - Animations fluides
 - **Vite** - Build tool rapide
+- **Supabase** - Authentification visiteurs et base de données
 
 ## 🎨 Caractéristiques
 
@@ -36,6 +37,17 @@ npm run dev
 ```
 
 Le site sera accessible sur `http://localhost:5173`
+
+## 🔐 Configuration Supabase
+
+1. Créez un projet sur [supabase.com](https://supabase.com).
+2. Dans **SQL Editor**, exécutez le fichier `supabase/schema.sql`.
+3. Copiez `.env.example` vers `.env.local`.
+4. Dans **Project Settings > API**, copiez l'URL du projet dans `VITE_SUPABASE_URL` et la clé publique `anon` dans `VITE_SUPABASE_ANON_KEY`.
+5. Dans **Authentication > Providers > Email**, activez l'authentification e-mail. Vous pouvez désactiver la confirmation e-mail pendant vos tests.
+6. Redémarrez `npm run dev` après toute modification du fichier `.env.local`.
+
+La route `/auth` permet l'inscription et la connexion. Les comptes sont stockés dans Supabase Auth, leurs profils dans `profiles`, et les demandes du formulaire dans `contact_messages`.
 
 ## 🏗️ Build pour production
 
