@@ -101,10 +101,9 @@ export const REGIONS = [
 export const SEED_CATEGORIES = ['Prébase', 'Base', 'R1', 'R2'] as const
 
 export const CONTACT = {
-  phones: ['+221 78 514 10 57', '+221 77 339 61 78'],
-  landline: '+221 33 865 04 05',
+  phones: ['+221 77 344 66 32'],
   email: 'africaagrosem@gmail.com',
-  whatsapp: '221785141057',
+  whatsapp: '221773446632',
 }
 
 export const whatsappLink = (text: string) =>

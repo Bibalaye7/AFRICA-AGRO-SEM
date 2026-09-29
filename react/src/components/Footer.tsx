@@ -39,7 +39,6 @@ const Footer = () => (
             {CONTACT.phones.map((p) => (
               <a key={p} href={`tel:${p.replace(/\s/g, '')}`} className="block hover:text-white">{p}</a>
             ))}
-            <p>Fixe : {CONTACT.landline}</p>
             <a href={`mailto:${CONTACT.email}`} className="block pt-2 hover:text-white">{CONTACT.email}</a>
           </div>
           <a

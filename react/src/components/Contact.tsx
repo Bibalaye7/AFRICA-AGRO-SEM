@@ -46,7 +46,6 @@ const Contact = () => {
                   {CONTACT.phones.map((p) => (
                     <a key={p} href={`tel:${p.replace(/\s/g, '')}`} className="block font-semibold hover:text-agro-green">{p}</a>
                   ))}
-                  <a href={`tel:${CONTACT.landline.replace(/\s/g, '')}`} className="block text-sm text-gray-600">Fixe : {CONTACT.landline}</a>
                 </div>
               </li>
               <li className="flex items-center gap-3">
