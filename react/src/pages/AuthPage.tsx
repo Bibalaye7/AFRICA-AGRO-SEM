@@ -60,7 +60,7 @@ const AuthPage = () => {
           <h2>{isSetup ? 'Premier accès' : 'Connexion'}</h2>
           <p className="auth-card__subtitle">{isSetup ? 'Créez le compte administrateur du site' : "Accédez à votre espace d'administration"}</p>
 
-          {unavailable && <div className="auth-alert">Le serveur ne répond pas : {unavailable}</div>}
+          {unavailable && <div className="auth-alert">L’espace professionnel n’est pas encore disponible en ligne. Merci de réessayer plus tard.</div>}
           {isSetup && !setupAllowed && (
             <div className="auth-alert">Aucun compte n’existe encore. Le compte administrateur doit être créé depuis l’ordinateur où le site est installé (http://localhost:5173/auth).</div>
           )}

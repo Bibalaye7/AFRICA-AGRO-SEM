@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import PublicLayout from '../components/PublicLayout'
 import { speciesName, CONTACT } from '../data/seeds'
 import { verifyLot, type LotVerification } from '../lib/campaignStore'
+import { ApiError } from '../lib/api'
 
 const statusInfo: Record<LotVerification['status'], { label: string; icon: string; className: string }> = {
   certifie: { label: 'Lot certifié', icon: 'fa-circle-check', className: 'bg-green-50 border-green-200 text-green-800' },
@@ -26,7 +27,12 @@ const VerifyLotPage = () => {
       setResult(lot)
       setState(lot ? 'found' : 'not_found')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Vérification impossible.')
+      // 503 : base de données pas encore disponible en ligne — message pour le visiteur, pas pour l'administrateur.
+      setError(
+        err instanceof ApiError && err.status === 503
+          ? `La vérification en ligne sera bientôt disponible. En attendant, appelez-nous au ${CONTACT.phones[0]} avec votre numéro de lot.`
+          : err instanceof Error ? err.message : 'Vérification impossible.',
+      )
       setState('error')
     }
   }
