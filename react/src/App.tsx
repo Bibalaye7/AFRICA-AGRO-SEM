@@ -8,20 +8,16 @@ import PartnershipPage from './pages/PartnershipPage'
 import VerifyLotPage from './pages/VerifyLotPage'
 import ScrollManager from './components/ScrollManager'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-import { isDemoMode } from './lib/campaignStore'
 
 // Chargé à la demande : les visiteurs du site public ne téléchargent pas le code du tableau de bord.
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 
-// Le tableau de bord est réservé aux comptes « admin » ou « agent ».
-// En mode démo (Supabase non configuré), il reste accessible pour découvrir l'outil.
+// Le tableau de bord est réservé aux comptes de l'équipe (agents et administrateurs).
 function StaffRoute({ children }: { children: ReactNode }) {
-  const { loading, user, role, isStaff } = useAuth()
+  const { loading, isStaff } = useAuth()
 
-  if (isDemoMode) return children
-  if (loading || (user && role === null)) return <div className="min-h-screen bg-gray-50" />
-  if (!user) return <Navigate to="/auth" replace state={{ from: '/tableau-de-bord' }} />
-  if (!isStaff) return <Navigate to="/auth" replace state={{ notStaff: true }} />
+  if (loading) return <div className="min-h-screen bg-gray-50" />
+  if (!isStaff) return <Navigate to="/auth" replace />
 
   return children
 }

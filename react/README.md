@@ -12,18 +12,19 @@ Refonte moderne du site web d'Africa Agro Sem avec React, TypeScript, Tailwind C
 - **Tableau de bord** de la campagne (`/tableau-de-bord`) : lots et stocks, distributions,
   indicateurs, graphiques, réservations, demandes de partenariat, export CSV
 
-## 🗄️ Mise en place de Supabase
+## 🗄️ Base de données
 
-1. Dans Supabase → *SQL Editor*, exécutez tout le fichier `supabase/schema.sql`.
-2. Créez votre compte depuis `/auth`, puis donnez-vous le rôle administrateur :
-   ```sql
-   update public.profiles set role = 'admin'
-   where id = (select id from auth.users where email = 'votre@email.com');
-   ```
-3. Seuls les comptes `admin` ou `agent` accèdent au tableau de bord.
+Le site a sa propre base de données **SQLite** (bibliothèque libSQL) et sa propre API (`server/`, `api/`).
 
-Sans variables Supabase, le tableau de bord fonctionne en **mode démo** (données d'exemple
-stockées dans le navigateur).
+- **En local** : rien à configurer. La base est le fichier `data/africa-agro-sem.db`, créé
+  automatiquement au premier lancement (`npm run dev`). **Sauvegardez ce fichier** : il contient
+  toutes les données (copiez-le simplement ailleurs, site arrêté).
+- **Premier accès** : ouvrez http://localhost:5173/auth et créez le compte administrateur.
+  Cette création n'est possible que depuis l'ordinateur local, et une seule fois.
+- **Équipe** : l'administrateur ajoute les agents depuis l'onglet « Équipe » du tableau de bord.
+- **En ligne (Vercel)** : créez une base gratuite sur [Turso](https://turso.tech) et ajoutez
+  `DATABASE_URL` et `DATABASE_AUTH_TOKEN` dans les variables d'environnement Vercel
+  (voir `VERCEL_DEPLOY.md`).
 
 ## 🚀 Installation
 
@@ -39,7 +40,7 @@ npm install
 - **Tailwind CSS** - Framework CSS utilitaire
 - **Framer Motion** - Animations fluides
 - **Vite** - Build tool rapide
-- **Supabase** - Authentification visiteurs et base de données
+- **SQLite / libSQL** - Base de données (fichier local, ou Turso en ligne)
 
 ## 🎨 Caractéristiques
 
@@ -60,17 +61,6 @@ npm run dev
 ```
 
 Le site sera accessible sur `http://localhost:5173`
-
-## 🔐 Configuration Supabase
-
-1. Créez un projet sur [supabase.com](https://supabase.com).
-2. Dans **SQL Editor**, exécutez le fichier `supabase/schema.sql`.
-3. Copiez `.env.example` vers `.env.local`.
-4. Dans **Project Settings > API**, copiez l'URL du projet dans `VITE_SUPABASE_URL` et la clé publique `anon` dans `VITE_SUPABASE_ANON_KEY`.
-5. Dans **Authentication > Providers > Email**, activez l'authentification e-mail. Vous pouvez désactiver la confirmation e-mail pendant vos tests.
-6. Redémarrez `npm run dev` après toute modification du fichier `.env.local`.
-
-La route `/auth` permet l'inscription et la connexion. Les comptes sont stockés dans Supabase Auth, leurs profils dans `profiles`, et les demandes du formulaire dans `contact_messages`.
 
 ## 🏗️ Build pour production
 

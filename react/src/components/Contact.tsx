@@ -1,12 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react'
-import emailjs from '@emailjs/browser'
-import { supabase } from '../lib/supabase'
+import { saveContactMessage } from '../lib/campaignStore'
+import { sendFormEmail } from '../lib/email'
 import { CONTACT, whatsappLink } from '../data/seeds'
-
-// Identifiants EmailJS (publics par conception) — surchargez-les dans .env.local si besoin.
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_6c7w5uj'
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_28ecf18'
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'ZuuXzMtP5NNOYwuMI'
 
 const Contact = () => {
   const formRef = useRef<HTMLFormElement>(null)
@@ -20,15 +15,9 @@ const Contact = () => {
 
     // Le message est enregistré en base (si disponible) ET envoyé par e-mail :
     // il suffit qu'un des deux canaux fonctionne pour qu'il ne soit pas perdu.
-    const saveToDb = supabase
-      ? supabase
-          .from('contact_messages')
-          .insert({ name: formData.nom, email: formData.email, message: formData.message })
-          .then(({ error }) => !error, () => false)
-      : Promise.resolve(false)
-    const sendEmail = emailjs
-      .sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, formRef.current, { publicKey: EMAILJS_PUBLIC_KEY })
+    const saveToDb = saveContactMessage({ name: formData.nom, email: formData.email, message: formData.message })
       .then(() => true, () => false)
+    const sendEmail = sendFormEmail(formRef.current).then(() => true, () => false)
 
     const [saved, sent] = await Promise.all([saveToDb, sendEmail])
     if (saved || sent) {

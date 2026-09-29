@@ -1,125 +1,90 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import type { Session, User } from '@supabase/supabase-js'
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { api } from '../lib/api'
 
-export type Role = 'visiteur' | 'agent' | 'admin'
+export type Role = 'agent' | 'admin'
+export type User = { id: string; email: string; full_name: string; role: Role }
+
+type Me = { user: User | null; needsSetup: boolean; setupAllowed: boolean }
 
 type AuthContextValue = {
-  session: Session | null
   user: User | null
-  role: Role | null
   isStaff: boolean
   loading: boolean
-  configured: boolean
+  /** Aucun compte n'existe encore dans la base. */
+  needsSetup: boolean
+  /** La création du premier compte est possible (uniquement depuis l'ordinateur local). */
+  setupAllowed: boolean
+  /** Le serveur ou la base ne répond pas. */
+  unavailable: string | null
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: string | null }>
-  signOut: () => Promise<{ error: string | null }>
+  setup: (fullName: string, email: string, password: string) => Promise<{ error: string | null }>
+  signOut: () => Promise<void>
+  refresh: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
-const getErrorMessage = (error: unknown) => {
-  if (error instanceof TypeError && error.message.toLowerCase().includes('fetch')) {
-    return 'Supabase est inaccessible. Vérifiez l’URL du projet et votre connexion internet.'
-  }
-  return error instanceof Error ? error.message : 'Une erreur inattendue est survenue.'
-}
+const message = (err: unknown) => (err instanceof Error ? err.message : 'Une erreur inattendue est survenue.')
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null)
-  const [role, setRole] = useState<Role | null>(null)
+  const [me, setMe] = useState<Me>({ user: null, needsSetup: false, setupAllowed: false })
   const [loading, setLoading] = useState(true)
+  const [unavailable, setUnavailable] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!supabase) {
+  const refresh = useCallback(async () => {
+    try {
+      setMe(await api<Me>('auth/me'))
+      setUnavailable(null)
+    } catch (err) {
+      setMe({ user: null, needsSetup: false, setupAllowed: false })
+      setUnavailable(message(err))
+    } finally {
       setLoading(false)
-      return
     }
-
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession)
-      setLoading(false)
-    })
-
-    return () => listener.subscription.unsubscribe()
   }, [])
 
-  const userId = session?.user?.id
-  const [roleLoading, setRoleLoading] = useState(false)
-
   useEffect(() => {
-    if (!supabase || !userId) {
-      setRole(null)
-      return
-    }
-    let cancelled = false
-    setRoleLoading(true)
-    supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', userId)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (cancelled) return
-        setRole((data?.role as Role | undefined) ?? 'visiteur')
-        setRoleLoading(false)
-      }, () => {
-        if (cancelled) return
-        setRole('visiteur')
-        setRoleLoading(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [userId])
+    refresh()
+  }, [refresh])
 
   const signIn = async (email: string, password: string) => {
-    if (!supabase) return { error: 'Supabase n’est pas encore configuré.' }
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
-      return { error: error ? getErrorMessage(error) : null }
-    } catch (error) {
-      return { error: getErrorMessage(error) }
+      const { user } = await api<{ user: User }>('auth/login', { method: 'POST', body: { email, password } })
+      setMe({ user, needsSetup: false, setupAllowed: false })
+      return { error: null }
+    } catch (err) {
+      return { error: message(err) }
     }
   }
 
-  const signUp = async (email: string, password: string, fullName: string) => {
-    if (!supabase) return { error: 'Supabase n’est pas encore configuré.' }
+  const setup = async (full_name: string, email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName } },
-      })
-      return { error: error ? getErrorMessage(error) : null }
-    } catch (error) {
-      return { error: getErrorMessage(error) }
+      const { user } = await api<{ user: User }>('auth/setup', { method: 'POST', body: { full_name, email, password } })
+      setMe({ user, needsSetup: false, setupAllowed: false })
+      return { error: null }
+    } catch (err) {
+      return { error: message(err) }
     }
   }
 
   const signOut = async () => {
-    if (!supabase) return { error: 'Supabase n’est pas encore configuré.' }
-    const { error } = await supabase.auth.signOut()
-    return { error: error ? getErrorMessage(error) : null }
+    await api('auth/logout', { method: 'POST' }).catch(() => undefined)
+    setMe((prev) => ({ ...prev, user: null }))
   }
 
   return (
     <AuthContext.Provider
       value={{
-        session,
-        user: session?.user ?? null,
-        role,
-        isStaff: role === 'admin' || role === 'agent',
-        loading: loading || roleLoading,
-        configured: isSupabaseConfigured,
+        user: me.user,
+        isStaff: Boolean(me.user),
+        loading,
+        needsSetup: me.needsSetup,
+        setupAllowed: me.setupAllowed,
+        unavailable,
         signIn,
-        signUp,
+        setup,
         signOut,
+        refresh,
       }}
     >
       {children}

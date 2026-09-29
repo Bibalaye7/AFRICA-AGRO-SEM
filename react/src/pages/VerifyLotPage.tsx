@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import PublicLayout from '../components/PublicLayout'
 import { speciesName, CONTACT } from '../data/seeds'
-import { verifyLot, isDemoMode, type LotVerification } from '../lib/campaignStore'
+import { verifyLot, type LotVerification } from '../lib/campaignStore'
 
 const statusInfo: Record<LotVerification['status'], { label: string; icon: string; className: string }> = {
   certifie: { label: 'Lot certifié', icon: 'fa-circle-check', className: 'bg-green-50 border-green-200 text-green-800' },
@@ -61,9 +61,6 @@ const VerifyLotPage = () => {
               {state === 'loading' ? 'Vérification…' : 'Vérifier'}
             </button>
           </form>
-          {isDemoMode && state === 'idle' && (
-            <p className="text-center text-xs text-gray-500 mt-3">Mode démo : essayez AAS-26-ARA-001.</p>
-          )}
 
           {state === 'found' && result && (
             <div className={`mt-8 rounded-2xl border p-6 ${statusInfo[result.status].className}`} role="status">

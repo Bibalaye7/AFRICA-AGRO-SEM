@@ -3,14 +3,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { REGIONS, SPECIES, speciesName } from '../data/seeds'
 import {
-  createCampaign, createDistribution, createLot, deleteDistribution, isDemoMode, listCampaigns, listPartnerships,
-  listReservations, loadCampaignData, resetDemoData, updatePartnershipStatus, updateReservationStatus,
+  createCampaign, createDistribution, createLot, deleteDistribution, listCampaigns, listPartnerships,
+  listReservations, loadCampaignData, updatePartnershipStatus, updateReservationStatus,
   type Campaign, type Distribution, type PartnershipRequest, type Reservation, type SeedLot,
 } from '../lib/campaignStore'
 import { CumulativeChart, HorizontalBars, ProgressBars, formatTonnes } from '../components/dashboard/charts'
 import { CampaignForm, DistributionForm, LotForm, Modal } from '../components/dashboard/forms'
+import { MessagesPanel, PasswordForm, TeamPanel } from '../components/dashboard/panels'
 
-type Tab = 'overview' | 'distributions' | 'lots' | 'reservations' | 'partnerships'
+type Tab = 'overview' | 'distributions' | 'lots' | 'reservations' | 'partnerships' | 'messages' | 'team'
 
 const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: 'overview', label: 'Vue d’ensemble', icon: 'fa-chart-pie' },
@@ -18,6 +19,8 @@ const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: 'lots', label: 'Stocks et lots', icon: 'fa-warehouse' },
   { id: 'reservations', label: 'Réservations', icon: 'fa-calendar-check' },
   { id: 'partnerships', label: 'Partenariats', icon: 'fa-handshake' },
+  { id: 'messages', label: 'Messages', icon: 'fa-envelope' },
+  { id: 'team', label: 'Équipe', icon: 'fa-users' },
 ]
 
 const beneficiaryLabels: Record<Distribution['beneficiary_type'], string> = {
@@ -60,7 +63,8 @@ const DashboardPage = () => {
   const [partnerships, setPartnerships] = useState<PartnershipRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [modal, setModal] = useState<'campaign' | 'lot' | 'distribution' | null>(null)
+  const [modal, setModal] = useState<'campaign' | 'lot' | 'distribution' | 'password' | null>(null)
+  const [notice, setNotice] = useState('')
   const [filters, setFilters] = useState({ search: '', region: '', species: '' })
 
   const loadAll = useCallback(async (preferredCampaign?: string) => {
@@ -91,6 +95,12 @@ const DashboardPage = () => {
   useEffect(() => {
     loadAll()
   }, [loadAll])
+
+  // Les demandes arrivent du site public à tout moment : on recharge la liste à l'ouverture de son onglet.
+  useEffect(() => {
+    if (tab === 'reservations') listReservations().then(setReservations, (err) => setError(err.message))
+    if (tab === 'partnerships') listPartnerships().then(setPartnerships, (err) => setError(err.message))
+  }, [tab])
 
   const campaign = campaigns.find((c) => c.id === campaignId)
   const lotById = useMemo(() => new Map(lots.map((l) => [l.id, l])), [lots])
@@ -216,11 +226,16 @@ const DashboardPage = () => {
               <i className="fa-solid fa-plus mr-1" aria-hidden="true" /> Campagne
             </button>
             <Link to="/" className="px-3 py-2 text-sm text-gray-600 hover:text-agro-green">Voir le site</Link>
-            {user && <button onClick={handleSignOut} className="px-3 py-2 text-sm text-gray-600 hover:text-agro-green">Déconnexion</button>}
+            {user && (
+              <button onClick={() => setModal('password')} className="px-3 py-2 text-sm text-gray-600 hover:text-agro-green" title={user.email}>
+                <i className="fa-solid fa-user mr-1.5" aria-hidden="true" />{user.full_name}
+              </button>
+            )}
+            <button onClick={handleSignOut} className="px-3 py-2 text-sm text-gray-600 hover:text-agro-green">Déconnexion</button>
           </div>
         </div>
         <nav className="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto" aria-label="Sections du tableau de bord">
-          {tabs.map((t) => {
+          {tabs.filter((t) => t.id !== 'team' || user?.role === 'admin').map((t) => {
             const badge = t.id === 'reservations' ? newReservations : t.id === 'partnerships' ? newPartnerships : 0
             return (
               <button
@@ -239,20 +254,12 @@ const DashboardPage = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {isDemoMode && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 flex flex-wrap items-center justify-between gap-2">
-            <span>
-              <i className="fa-solid fa-circle-info mr-2" aria-hidden="true" />
-              <strong>Mode démo</strong> : Supabase n’est pas configuré, les données sont des exemples stockés dans ce navigateur.
-            </span>
-            <button onClick={() => { resetDemoData(); loadAll() }} className="underline">Réinitialiser les exemples</button>
-          </div>
-        )}
+        {notice && <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800" role="status">{notice}</div>}
         {error && <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">{error}</div>}
 
         {loading ? (
           <p className="text-center text-gray-500 py-20">Chargement…</p>
-        ) : !campaign ? (
+        ) : !['overview', 'distributions', 'lots'].includes(tab) ? null : !campaign ? (
           <div className="text-center py-20 bg-white rounded-2xl">
             <p className="text-gray-600 mb-4">Aucune campagne n’a encore été créée.</p>
             <button onClick={() => setModal('campaign')} className="btn-primary">Créer la première campagne</button>
@@ -493,6 +500,9 @@ const DashboardPage = () => {
           </Card>
         )}
 
+        {!loading && tab === 'messages' && <MessagesPanel />}
+        {!loading && tab === 'team' && user?.role === 'admin' && <TeamPanel currentUser={user} />}
+
         {!loading && tab === 'partnerships' && (
           <Card title={`Demandes de partenariat (${partnerships.length})`}>
             <ul className="divide-y">
@@ -529,6 +539,11 @@ const DashboardPage = () => {
         )}
       </main>
 
+      {modal === 'password' && (
+        <Modal title="Changer mon mot de passe" onClose={() => setModal(null)}>
+          <PasswordForm onDone={() => { setModal(null); setNotice('Mot de passe modifié.') }} />
+        </Modal>
+      )}
       {modal === 'campaign' && (
         <Modal title="Nouvelle campagne" onClose={() => setModal(null)}>
           <CampaignForm onSubmit={async (c) => { await createCampaign(c); await afterSave() }} />

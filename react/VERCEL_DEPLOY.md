@@ -21,17 +21,19 @@
      - **Output Directory**: `dist`
      - **Install Command**: `npm install`
 
-4. **Variables d'environnement (Obligatoire pour l'authentification)**
-    - Dans **Settings → Environment Variables**, ajoutez ces variables pour les environnements **Production**, **Preview** et **Development** :
-       - `VITE_SUPABASE_URL` : l'URL de votre projet Supabase
-       - `VITE_SUPABASE_ANON_KEY` : la clé publique `anon` de votre projet Supabase
-    - Après l'ajout ou la modification de ces variables, relancez un déploiement. Vite injecte les variables `VITE_*` pendant le build ; elles ne sont donc pas prises en compte par un ancien déploiement.
-    - Si vous utilisez des variables d'environnement pour EmailJS, ajoutez-les également dans :
-     - Settings → Environment Variables
-     - Variables à ajouter (optionnel) :
-       - `VITE_EMAILJS_SERVICE_ID`
-       - `VITE_EMAILJS_TEMPLATE_ID`
-       - `VITE_EMAILJS_PUBLIC_KEY`
+4. **Base de données (obligatoire pour le tableau de bord en ligne)**
+    - Créez une base gratuite sur https://turso.tech (commande `turso db create africa-agro-sem`),
+      puis récupérez son URL (`libsql://…`) et un jeton (`turso db tokens create africa-agro-sem`).
+    - Dans **Settings → Environment Variables**, ajoutez pour **Production** et **Preview** :
+       - `DATABASE_URL` : l'URL `libsql://…` de la base Turso
+       - `DATABASE_AUTH_TOKEN` : le jeton Turso
+       - `SESSION_SECRET` (conseillé) : une longue chaîne aléatoire
+    - Sans ces variables, le site public fonctionne et les formulaires arrivent par e-mail (EmailJS),
+      mais le tableau de bord et la vérification de lot restent indisponibles en ligne.
+    - Pour créer le premier administrateur de la base en ligne : sur votre PC, lancez le site avec
+      les mêmes `DATABASE_URL` / `DATABASE_AUTH_TOKEN` dans `.env.local`, puis ouvrez
+      http://localhost:5173/auth.
+    - Variables EmailJS (optionnel) : `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY`.
 
 5. **Déployer**
    - Cliquez sur "Deploy"

@@ -2,12 +2,10 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
-import { supabase } from '../lib/supabase'
 
 const AuthPage = () => {
   const navigate = useNavigate()
-  const { configured, loading, user, role, isStaff, signIn, signUp, signOut } = useAuth()
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
+  const { loading, user, needsSetup, setupAllowed, unavailable, signIn, setup } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
@@ -15,39 +13,23 @@ const AuthPage = () => {
   const [submitting, setSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  if (loading || (user && role === null)) return <div className="min-h-screen bg-gray-50" />
-  if (user && isStaff) return <Navigate to="/tableau-de-bord" replace />
+  if (loading) return <div className="min-h-screen bg-gray-50" />
+  if (user) return <Navigate to="/tableau-de-bord" replace />
 
-  const handleForgotPassword = async () => {
-    if (!supabase) return
-    if (!email) {
-      setMessage('Saisissez d’abord votre adresse e-mail, puis cliquez sur « Mot de passe oublié ».')
-      return
-    }
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth` })
-    setMessage(error ? error.message : 'Un lien de réinitialisation vous a été envoyé par e-mail.')
-  }
+  // Tant qu'aucun compte n'existe, la page sert à créer l'administrateur (depuis l'ordinateur local uniquement).
+  const isSetup = needsSetup
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setMessage('')
     setSubmitting(true)
-    const result = mode === 'signin'
-      ? await signIn(email, password)
-      : await signUp(email, password, fullName)
+    const result = isSetup ? await setup(fullName, email, password) : await signIn(email, password)
     setSubmitting(false)
-
     if (result.error) {
       setMessage(result.error)
       return
     }
-
-    if (mode === 'signin') {
-      setMessage('Connexion réussie. Redirection en cours...')
-      setTimeout(() => navigate('/tableau-de-bord'), 500)
-    } else {
-      setMessage('Compte créé. Vérifiez votre adresse e-mail avant de vous connecter.')
-    }
+    navigate('/tableau-de-bord')
   }
 
   return (
@@ -75,34 +57,28 @@ const AuthPage = () => {
           <div className="auth-logo auth-logo--card" aria-label="Africa Agro Sem">
             <img src="/les_logos/logo-blanc.jpg" alt="Africa Agro Sem" />
           </div>
-          <h2>{mode === 'signin' ? 'Connexion' : 'Créer un compte'}</h2>
-          <p className="auth-card__subtitle">{mode === 'signin' ? "Accédez à votre espace d'administration" : 'Créez votre espace Africa Agro Sem'}</p>
+          <h2>{isSetup ? 'Premier accès' : 'Connexion'}</h2>
+          <p className="auth-card__subtitle">{isSetup ? 'Créez le compte administrateur du site' : "Accédez à votre espace d'administration"}</p>
 
-          {user && !isStaff && (
-            <div className="auth-alert">
-              Vous êtes connecté ({user.email}), mais votre compte n’a pas encore accès au tableau de bord. Demandez à un administrateur de vous attribuer le rôle « agent » ou « admin ».
-              <button type="button" onClick={() => signOut()} className="block mt-2 underline">Se déconnecter</button>
-            </div>
+          {unavailable && <div className="auth-alert">Le serveur ne répond pas : {unavailable}</div>}
+          {isSetup && !setupAllowed && (
+            <div className="auth-alert">Aucun compte n’existe encore. Le compte administrateur doit être créé depuis l’ordinateur où le site est installé (http://localhost:5173/auth).</div>
           )}
-          {!configured && <div className="auth-alert">Supabase n’est pas configuré. Ajoutez vos variables `.env.local` pour activer les comptes.</div>}
 
           <form onSubmit={handleSubmit} className="auth-form">
-            {mode === 'signup' && <label className="auth-field"><span>Nom complet</span><span className="auth-field__input"><input required value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="Votre nom complet" /></span></label>}
+            {isSetup && <label className="auth-field"><span>Nom complet</span><span className="auth-field__input"><input required value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="Votre nom complet" /></span></label>}
             <label className="auth-field">
               <span>Adresse e-mail</span>
               <span className="auth-field__input"><span className="auth-field__icon">♙</span><input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Votre adresse e-mail" /></span>
             </label>
             <label className="auth-field">
               <span>Mot de passe</span>
-              <span className="auth-field__input"><span className="auth-field__icon">▣</span><input required minLength={6} type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Votre mot de passe" /><button type="button" className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}>{showPassword ? '◉' : '◌'}</button></span>
+              <span className="auth-field__input"><span className="auth-field__icon">▣</span><input required minLength={isSetup ? 8 : undefined} type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} placeholder={isSetup ? 'Au moins 8 caractères' : 'Votre mot de passe'} /><button type="button" className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}>{showPassword ? '◉' : '◌'}</button></span>
             </label>
-            <div className="auth-options"><span /><button type="button" onClick={handleForgotPassword}>Mot de passe oublié ?</button></div>
+            {!isSetup && <div className="auth-options"><span /><button type="button" onClick={() => setMessage('Demandez à un administrateur de réinitialiser votre accès depuis l’onglet « Équipe » du tableau de bord.')}>Mot de passe oublié ?</button></div>}
             {message && <p className="auth-message">{message}</p>}
-            <button disabled={!configured || submitting} className="auth-submit">{submitting ? 'Traitement...' : mode === 'signin' ? 'Se connecter  →' : 'Créer mon compte  →'}</button>
+            <button disabled={submitting || Boolean(unavailable) || (isSetup && !setupAllowed)} className="auth-submit">{submitting ? 'Traitement...' : isSetup ? 'Créer le compte administrateur  →' : 'Se connecter  →'}</button>
           </form>
-          <button type="button" onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setMessage('') }} className="auth-switch">
-            {mode === 'signin' ? 'Pas encore de compte ? Créer un compte' : 'Déjà inscrit ? Se connecter'}
-          </button>
           <div className="auth-return"><span /> <Link to="/">⌂ &nbsp; Retour à ma page d’accueil</Link> <span /></div>
         </motion.div>
         <div className="auth-values" aria-hidden="true"><span>♧<small>Agriculture</small></span><i /><span>✣<small>Innovation</small></span><i /><span>♧<small>Partenariat</small></span></div>

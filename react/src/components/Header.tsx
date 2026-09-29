@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
-import { isDemoMode } from '../lib/campaignStore'
 
 const navItems = [
   { label: 'Accueil', to: '/' },
@@ -19,7 +18,7 @@ const Header = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, isStaff, signOut } = useAuth()
-  const canSeeDashboard = isDemoMode || isStaff
+  const canSeeDashboard = isStaff
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -87,7 +86,7 @@ const Header = () => {
                 Déconnexion
               </button>
             ) : (
-              !isDemoMode && (
+              (
                 <Link to="/auth" className="text-sm font-medium text-gray-600 hover:text-agro-green">
                   Espace pro
                 </Link>
@@ -144,7 +143,7 @@ const Header = () => {
                     Déconnexion
                   </button>
                 ) : (
-                  !isDemoMode && (
+                  (
                     <Link to="/auth" className="py-3 text-base font-medium text-gray-700">
                       Espace pro
                     </Link>
