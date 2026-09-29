@@ -237,7 +237,7 @@ const ActivitiesPage = () => {
         </section>
 
         {/* ---- La chaîne, étape par étape ---- */}
-        <section id="chaine" className="py-20 bg-gradient-to-b from-green-50 to-white scroll-mt-20">
+        <section id="chaine" className="py-20 bg-gradient-to-b from-green-50 to-white scroll-mt-20 overflow-x-clip">
           <div className="container mx-auto px-4 lg:px-8">
             <h2 className="section-title mb-3">De la graine au champ</h2>
             <p className="text-center text-lg text-gray-600 max-w-2xl mx-auto mb-16">Faites défiler pour suivre le parcours d’une semence Africa Agro Sem.</p>

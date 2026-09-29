@@ -90,7 +90,7 @@
 .auth-values span { display: flex; align-items: center; flex-direction: column; gap: 5px; }
 .auth-values small { color: #5c6c6b; font-size: 10px; }
 .auth-values i { height: 38px; width: 1px; background: #cadcd5; }
-@media (max-width: 860px) { .auth-page { display: block; overflow: visible; } .auth-story { min-height: 470px; } .auth-story__content { padding: 42px 28px; } .auth-story h1 { font-size: clamp(2.25rem, 9vw, 3.5rem); } .auth-benefits { grid-template-columns: 1fr 1fr; gap: 12px; } .auth-quote { margin-top: 30px; } .auth-panel { min-height: 650px; padding-top: 52px; } }
+@media (max-width: 860px) { .auth-page { display: block; overflow: visible; } .auth-panel { overflow: hidden; } .auth-story { min-height: 470px; } .auth-story__content { padding: 42px 28px; } .auth-story h1 { font-size: clamp(2.25rem, 9vw, 3.5rem); } .auth-benefits { grid-template-columns: 1fr 1fr; gap: 12px; } .auth-quote { margin-top: 30px; } .auth-panel { min-height: 650px; padding-top: 52px; } }
 @media (max-width: 480px) { .auth-story { min-height: 570px; } .auth-story__content { padding: 32px 22px; } .auth-logo--story { width: 220px; height: 78px; } .auth-benefits { grid-template-columns: 1fr; } .auth-panel { padding: 42px 16px 30px; } .auth-card { padding: 24px 19px; } .auth-options { align-items: flex-start; flex-direction: column; } }
 
 /* Page « Nos activités » : bandeau des cultures et dégradé animé */
