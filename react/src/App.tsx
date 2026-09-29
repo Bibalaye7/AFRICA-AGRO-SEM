@@ -6,6 +6,7 @@ import AuthPage from './pages/AuthPage'
 import SeedsPage from './pages/SeedsPage'
 import PartnershipPage from './pages/PartnershipPage'
 import VerifyLotPage from './pages/VerifyLotPage'
+import ActivitiesPage from './pages/ActivitiesPage'
 import ScrollManager from './components/ScrollManager'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/a-propos" element={<AboutPage />} />
+          <Route path="/nos-activites" element={<ActivitiesPage />} />
           <Route path="/semences" element={<SeedsPage />} />
           <Route path="/partenariats" element={<PartnershipPage />} />
           <Route path="/verifier-lot" element={<VerifyLotPage />} />

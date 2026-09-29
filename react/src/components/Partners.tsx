@@ -35,7 +35,8 @@ const Partners = () => (
       <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {partners.map((partner) => (
           <article key={partner.title} className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <img src={partner.image} alt={partner.title} className="w-full h-52 object-cover" loading="lazy" />
+            {/* Photos en portrait avec les visages en haut : cadre portrait, calé sur le haut de l'image */}
+            <img src={partner.image} alt={partner.title} className="w-full aspect-[4/5] object-cover object-top" loading="lazy" />
             <div className="p-6">
               <h3 className="text-xl font-bold text-agro-green mb-2">{partner.title}</h3>
               <p className="text-sm text-gray-600 leading-relaxed">{partner.description}</p>
@@ -72,7 +73,7 @@ const Partners = () => (
 
       <div className="grid sm:grid-cols-3 gap-4 max-w-6xl mx-auto mt-8">
         {gallery.map((img) => (
-          <img key={img.src} src={img.src} alt={img.alt} className="rounded-xl shadow w-full h-56 object-cover" loading="lazy" />
+          <img key={img.src} src={img.src} alt={img.alt} className="rounded-xl shadow w-full aspect-[3/2] object-cover" loading="lazy" />
         ))}
       </div>
 

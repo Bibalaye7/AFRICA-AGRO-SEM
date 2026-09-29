@@ -83,10 +83,10 @@ const Hero = () => {
                 Réserver mes semences
               </Link>
               <Link
-                to="/verifier-lot"
+                to="/nos-activites"
                 className="py-3 px-6 rounded-lg font-semibold text-white border-2 border-white/80 hover:bg-white hover:text-agro-green transition-colors"
               >
-                Vérifier un lot
+                Découvrir nos activités
               </Link>
             </div>
           </div>

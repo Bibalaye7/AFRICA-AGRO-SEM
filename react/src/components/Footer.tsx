@@ -3,6 +3,7 @@ import { CONTACT, whatsappLink } from '../data/seeds'
 
 const links = [
   { label: 'Accueil', to: '/' },
+  { label: 'Nos activités', to: '/nos-activites' },
   { label: 'Nos semences', to: '/semences' },
   { label: 'Réserver', to: '/#reservation' },
   { label: 'Vérifier un lot', to: '/verifier-lot' },

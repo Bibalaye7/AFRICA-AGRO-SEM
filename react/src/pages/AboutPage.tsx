@@ -34,6 +34,8 @@ const sections = [
     title: 'Nos engagements clés',
     image: '/images/PHOTO-2025-01-17-20-24-03.jpg',
     alt: 'Pratiques agricoles durables',
+    // Photo en portrait, visage dans le quart supérieur
+    position: '50% 12%',
     body: (
       <ul className="space-y-2">
         <li><strong>Protéger l’environnement</strong> par des pratiques agricoles écoresponsables et une logistique optimisée.</li>
@@ -89,7 +91,13 @@ const AboutPage = () => (
           transition={{ duration: 0.5 }}
           className={`grid md:grid-cols-2 gap-8 items-center ${index % 2 ? 'md:[&>img]:order-last' : ''}`}
         >
-          <img src={section.image} alt={section.alt} className="w-full h-72 object-cover rounded-2xl shadow-xl" loading="lazy" />
+          <img
+            src={section.image}
+            alt={section.alt}
+            className="w-full h-80 object-cover rounded-2xl shadow-xl"
+            style={{ objectPosition: 'position' in section ? section.position : '50% 40%' }}
+            loading="lazy"
+          />
           <div className="text-gray-700 leading-relaxed">
             <h2 className="text-3xl font-bold text-agro-green mb-4">{section.title}</h2>
             {section.body}
