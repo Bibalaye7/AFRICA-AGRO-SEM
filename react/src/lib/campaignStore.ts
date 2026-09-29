@@ -164,3 +164,40 @@ export const saveContactMessage = (input: { name: string; email: string; message
 
 export const verifyLot = (lotNumber: string) =>
   api<LotVerification | null>(`lots/verify?lot=${encodeURIComponent(lotNumber.trim())}`)
+
+// ---------- Commandes d'élevage (lait, poulets, œufs) ----------
+
+export type LivestockOrder = {
+  id: string
+  created_at: string
+  product: 'lait' | 'poulet' | 'oeufs'
+  product_option: string | null
+  quantity: number
+  frequency: 'unique' | 'hebdomadaire' | 'mensuelle'
+  customer_type: string
+  full_name: string
+  phone: string
+  address: string
+  delivery: 'livraison' | 'retrait'
+  wanted_date: string | null
+  message: string | null
+  status: 'nouvelle' | 'confirmee' | 'livree' | 'annulee'
+}
+
+export type NewLivestockOrder = Omit<LivestockOrder, 'id' | 'created_at' | 'status'>
+
+export function submitLivestockOrder(input: NewLivestockOrder, summary: string): Promise<void> {
+  return saveAndNotify(
+    api('livestock-orders', { method: 'POST', body: input }),
+    sendEmail({
+      from_name: `Commande élevage – ${input.full_name}`,
+      from_email: 'non renseigné (contact par téléphone)',
+      message: summary,
+    }),
+  )
+}
+
+export const listLivestockOrders = () => api<LivestockOrder[]>('livestock-orders')
+
+export const updateLivestockOrderStatus = (id: string, status: LivestockOrder['status']) =>
+  api(`livestock-orders/${encodeURIComponent(id)}`, { method: 'PATCH', body: { status } }).then(() => undefined)

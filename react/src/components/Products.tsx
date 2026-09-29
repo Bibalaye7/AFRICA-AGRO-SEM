@@ -36,7 +36,7 @@ const Products = () => (
             </div>
             <div className="p-4 flex-1 flex flex-col">
               <p className="text-sm text-gray-600 mb-3">
-                Variétés : <span className="font-semibold text-gray-800">{s.varieties.map((v) => v.name).join(', ')}</span>
+                <span className="font-semibold text-gray-800">{s.varieties.map((v) => `Variété ${v.name}`).join(', ')}</span>
               </p>
               <dl className="text-sm space-y-1 mb-4">
                 <div className="flex justify-between gap-2"><dt className="text-gray-500">Dose</dt><dd className="font-medium">{s.seedRate} kg/ha</dd></div>

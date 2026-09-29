@@ -77,7 +77,7 @@ const VerifyLotPage = () => {
               <dl className="grid grid-cols-2 gap-4 text-gray-800">
                 <div><dt className="text-xs uppercase text-gray-500">Numéro de lot</dt><dd className="font-semibold">{result.lot_number}</dd></div>
                 <div><dt className="text-xs uppercase text-gray-500">Campagne</dt><dd className="font-semibold">{result.campaign}</dd></div>
-                <div><dt className="text-xs uppercase text-gray-500">Espèce / variété</dt><dd className="font-semibold">{speciesName(result.species)} – {result.variety}</dd></div>
+                <div><dt className="text-xs uppercase text-gray-500">Espèce / variété</dt><dd className="font-semibold">{speciesName(result.species)} – Variété {result.variety}</dd></div>
                 <div><dt className="text-xs uppercase text-gray-500">Catégorie</dt><dd className="font-semibold">{result.category}</dd></div>
                 <div><dt className="text-xs uppercase text-gray-500">Date de certification</dt><dd className="font-semibold">{formatDate(result.certification_date)}</dd></div>
                 <div><dt className="text-xs uppercase text-gray-500">Taux de germination</dt><dd className="font-semibold">{result.germination_rate != null ? `${result.germination_rate} %` : '—'}</dd></div>

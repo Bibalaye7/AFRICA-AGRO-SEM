@@ -225,7 +225,7 @@ export function DistributionForm({
         <label className="form-label" htmlFor="d-lot">Lot *</label>
         <select id="d-lot" value={form.lot_id} onChange={(e) => setForm({ ...form, lot_id: e.target.value })} className="form-input">
           {available.map((l) => (
-            <option key={l.id} value={l.id}>{l.lot_number} – {speciesName(l.species)} {l.variety} ({l.warehouse})</option>
+            <option key={l.id} value={l.id}>{l.lot_number} – {speciesName(l.species)}, variété {l.variety} ({l.warehouse})</option>
           ))}
         </select>
         {lot && <p className="text-xs text-gray-500 mt-1">Stock restant : <strong>{formatTonnes(remaining)}</strong></p>}

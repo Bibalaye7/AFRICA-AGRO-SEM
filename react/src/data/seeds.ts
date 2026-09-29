@@ -34,9 +34,7 @@ export const SPECIES: Species[] = [
     yieldPotential: '1,5 à 3 t/ha',
     description: "Culture phare du bassin arachidier. Nos semences sont triées, traitées et testées en germination avant chaque campagne.",
     varieties: [
-      { name: '55-437', cycle: '90 jours', zone: 'Nord et centre-nord (Louga, Diourbel)', atout: 'Précoce, tolère les fins de saison sèches' },
-      { name: '73-33', cycle: '110 jours', zone: 'Sud du bassin (Kaolack, Kaffrine)', atout: 'Bon rendement en gousses' },
-      { name: 'Fleur 11', cycle: '90 jours', zone: 'Centre (Thiès, Fatick)', atout: 'Graines homogènes, bonne teneur en huile' },
+      { name: 'Sunugal', cycle: '90 jours', zone: 'Bassin arachidier', atout: 'Précoce, tolère les fins de saison sèches' },
     ],
   },
   {
@@ -49,8 +47,7 @@ export const SPECIES: Species[] = [
     yieldPotential: '3 à 6 t/ha',
     description: 'Variétés adaptées au sud et à l’est du pays, pour la consommation et l’alimentation animale.',
     varieties: [
-      { name: 'Early Thai', cycle: '80 – 85 jours', zone: 'Centre et sud', atout: 'Très précoce, sécurise la récolte' },
-      { name: 'Obatanpa', cycle: '105 jours', zone: 'Sud (Kolda, Sédhiou, Tambacounda)', atout: 'Riche en protéines' },
+      { name: 'Sunugal', cycle: '80 – 85 jours', zone: 'Centre, sud et est', atout: 'Très précoce, sécurise la récolte' },
     ],
   },
   {
@@ -63,8 +60,7 @@ export const SPECIES: Species[] = [
     yieldPotential: '1 à 2 t/ha',
     description: 'Légumineuse clé de la sécurité alimentaire, qui enrichit le sol en azote pour la culture suivante.',
     varieties: [
-      { name: 'Mélakh', cycle: '60 jours', zone: 'Nord et centre', atout: 'Très précoce, tolère la sécheresse' },
-      { name: 'Yacine', cycle: '70 jours', zone: 'Centre et centre-sud', atout: 'Grosses graines, bonne valeur marchande' },
+      { name: 'Sunugal', cycle: '60 jours', zone: 'Nord et centre', atout: 'Très précoce, tolère la sécheresse' },
     ],
   },
   {
@@ -77,8 +73,7 @@ export const SPECIES: Species[] = [
     yieldPotential: '1 à 2,5 t/ha',
     description: 'Céréale de base résistante à la sécheresse, adaptée aux sols sableux.',
     varieties: [
-      { name: 'Souna 3', cycle: '85 – 90 jours', zone: 'Tout le bassin arachidier', atout: 'Rustique et productive' },
-      { name: 'Thialack 2', cycle: '95 jours', zone: 'Centre et sud', atout: 'Épis longs, bon grain' },
+      { name: 'Sunugal', cycle: '85 – 90 jours', zone: 'Tout le bassin arachidier', atout: 'Rustique et productive' },
     ],
   },
   {
@@ -91,8 +86,7 @@ export const SPECIES: Species[] = [
     yieldPotential: '1,5 à 3 t/ha',
     description: 'Céréale robuste pour les zones à pluviométrie irrégulière et les sols lourds.',
     varieties: [
-      { name: 'CE 145-66', cycle: '100 jours', zone: 'Centre et sud', atout: 'Grain blanc apprécié en cuisine' },
-      { name: 'CE 180-33', cycle: '90 jours', zone: 'Centre-nord', atout: 'Précoce, bonne tenue à la verse' },
+      { name: 'Sunugal', cycle: '100 jours', zone: 'Centre et sud', atout: 'Grain blanc apprécié en cuisine' },
     ],
   },
 ]

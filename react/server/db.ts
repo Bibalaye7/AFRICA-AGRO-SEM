@@ -89,6 +89,22 @@ const SCHEMA = [
     status text not null default 'nouvelle' check (status in ('nouvelle', 'en_cours', 'conclue', 'refusee')),
     created_at text not null default (datetime('now'))
   )`,
+  `create table if not exists livestock_orders (
+    id text primary key,
+    product text not null check (product in ('lait', 'poulet', 'oeufs')),
+    product_option text,
+    quantity real not null check (quantity > 0),
+    frequency text not null default 'unique' check (frequency in ('unique', 'hebdomadaire', 'mensuelle')),
+    customer_type text not null,
+    full_name text not null,
+    phone text not null,
+    address text not null,
+    delivery text not null default 'livraison' check (delivery in ('livraison', 'retrait')),
+    wanted_date text,
+    message text,
+    status text not null default 'nouvelle' check (status in ('nouvelle', 'confirmee', 'livree', 'annulee')),
+    created_at text not null default (datetime('now'))
+  )`,
   `create table if not exists contact_messages (
     id text primary key,
     name text not null,

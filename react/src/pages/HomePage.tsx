@@ -2,6 +2,7 @@ import PublicLayout from '../components/PublicLayout'
 import Hero from '../components/Hero'
 import ActivitiesTeaser from '../components/ActivitiesTeaser'
 import Products from '../components/Products'
+import ElevageTeaser from '../components/ElevageTeaser'
 import WhyUs from '../components/WhyUs'
 import CampaignCalendar from '../components/CampaignCalendar'
 import Reservation from '../components/Reservation'
@@ -13,6 +14,7 @@ const HomePage = () => (
     <Hero />
     <ActivitiesTeaser />
     <Products />
+    <ElevageTeaser />
     <WhyUs />
     <CampaignCalendar />
     <Reservation />

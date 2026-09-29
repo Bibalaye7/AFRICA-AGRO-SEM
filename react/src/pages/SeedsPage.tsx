@@ -48,7 +48,7 @@ const SeedsPage = () => (
                 <caption className="sr-only">Variétés de {s.name}</caption>
                 <thead>
                   <tr className="text-left text-gray-500 border-b">
-                    <th className="py-2 pr-4 font-medium">Variété</th>
+                    <th className="py-2 pr-4 font-medium">Semence</th>
                     <th className="py-2 pr-4 font-medium">Cycle</th>
                     <th className="py-2 pr-4 font-medium">Zone recommandée</th>
                     <th className="py-2 font-medium">Atout</th>
@@ -57,7 +57,7 @@ const SeedsPage = () => (
                 <tbody>
                   {s.varieties.map((v) => (
                     <tr key={v.name} className="border-b last:border-0">
-                      <td className="py-3 pr-4 font-semibold text-gray-900 whitespace-nowrap">{v.name}</td>
+                      <td className="py-3 pr-4 font-semibold text-gray-900 whitespace-nowrap">Variété {v.name}</td>
                       <td className="py-3 pr-4 whitespace-nowrap">{v.cycle}</td>
                       <td className="py-3 pr-4">{v.zone}</td>
                       <td className="py-3">{v.atout}</td>

@@ -5,19 +5,21 @@ import { REGIONS, SPECIES, speciesName } from '../data/seeds'
 import {
   createCampaign, createDistribution, createLot, deleteDistribution, listCampaigns, listPartnerships,
   listReservations, loadCampaignData, updatePartnershipStatus, updateReservationStatus,
+  listLivestockOrders, updateLivestockOrderStatus, type LivestockOrder,
   type Campaign, type Distribution, type PartnershipRequest, type Reservation, type SeedLot,
 } from '../lib/campaignStore'
 import { CumulativeChart, HorizontalBars, ProgressBars, formatTonnes } from '../components/dashboard/charts'
 import { CampaignForm, DistributionForm, LotForm, Modal } from '../components/dashboard/forms'
-import { MessagesPanel, PasswordForm, TeamPanel } from '../components/dashboard/panels'
+import { LivestockOrdersPanel, MessagesPanel, PasswordForm, TeamPanel } from '../components/dashboard/panels'
 
-type Tab = 'overview' | 'distributions' | 'lots' | 'reservations' | 'partnerships' | 'messages' | 'team'
+type Tab = 'overview' | 'distributions' | 'lots' | 'reservations' | 'livestock' | 'partnerships' | 'messages' | 'team'
 
 const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: 'overview', label: 'Vue d’ensemble', icon: 'fa-chart-pie' },
   { id: 'distributions', label: 'Distributions', icon: 'fa-truck-ramp-box' },
   { id: 'lots', label: 'Stocks et lots', icon: 'fa-warehouse' },
   { id: 'reservations', label: 'Réservations', icon: 'fa-calendar-check' },
+  { id: 'livestock', label: 'Commandes élevage', icon: 'fa-cow' },
   { id: 'partnerships', label: 'Partenariats', icon: 'fa-handshake' },
   { id: 'messages', label: 'Messages', icon: 'fa-envelope' },
   { id: 'team', label: 'Équipe', icon: 'fa-users' },
@@ -61,6 +63,7 @@ const DashboardPage = () => {
   const [distributions, setDistributions] = useState<Distribution[]>([])
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [partnerships, setPartnerships] = useState<PartnershipRequest[]>([])
+  const [livestockOrders, setLivestockOrders] = useState<LivestockOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [modal, setModal] = useState<'campaign' | 'lot' | 'distribution' | 'password' | null>(null)
@@ -71,7 +74,8 @@ const DashboardPage = () => {
     setLoading(true)
     setError('')
     try {
-      const [cs, rs, ps] = await Promise.all([listCampaigns(), listReservations(), listPartnerships()])
+      const [cs, rs, ps, lo] = await Promise.all([listCampaigns(), listReservations(), listPartnerships(), listLivestockOrders()])
+      setLivestockOrders(lo)
       setCampaigns(cs)
       setReservations(rs)
       setPartnerships(ps)
@@ -100,6 +104,7 @@ const DashboardPage = () => {
   useEffect(() => {
     if (tab === 'reservations') listReservations().then(setReservations, (err) => setError(err.message))
     if (tab === 'partnerships') listPartnerships().then(setPartnerships, (err) => setError(err.message))
+    if (tab === 'livestock') listLivestockOrders().then(setLivestockOrders, (err) => setError(err.message))
   }, [tab])
 
   const campaign = campaigns.find((c) => c.id === campaignId)
@@ -236,7 +241,11 @@ const DashboardPage = () => {
         </div>
         <nav className="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto" aria-label="Sections du tableau de bord">
           {tabs.filter((t) => t.id !== 'team' || user?.role === 'admin').map((t) => {
-            const badge = t.id === 'reservations' ? newReservations : t.id === 'partnerships' ? newPartnerships : 0
+            const badge =
+              t.id === 'reservations' ? newReservations
+              : t.id === 'partnerships' ? newPartnerships
+              : t.id === 'livestock' ? livestockOrders.filter((o) => o.status === 'nouvelle').length
+              : 0
             return (
               <button
                 key={t.id}
@@ -368,7 +377,7 @@ const DashboardPage = () => {
                             </td>
                             <td className="py-2.5 pr-3">{d.region}{d.commune ? <span className="block text-xs text-gray-500">{d.commune}</span> : null}</td>
                             <td className="py-2.5 pr-3">
-                              {speciesName(lot?.species ?? '')} {lot?.variety}
+                              {speciesName(lot?.species ?? '')} · Variété {lot?.variety}
                               <span className="block text-xs text-gray-500">{lot?.lot_number}</span>
                             </td>
                             <td className="py-2.5 pr-3 text-right tabular-nums font-semibold whitespace-nowrap">{formatTonnes(d.quantity_kg)}</td>
@@ -421,7 +430,7 @@ const DashboardPage = () => {
                           <tr key={l.id} className="border-b last:border-0">
                             <td className="py-2.5 pr-3 font-medium text-gray-900 whitespace-nowrap">{l.lot_number}</td>
                             <td className="py-2.5 pr-3">
-                              {speciesName(l.species)} {l.variety}
+                              {speciesName(l.species)} · Variété {l.variety}
                               <span className="block text-xs text-gray-500">Cat. {l.category}{l.germination_rate != null ? ` · germ. ${l.germination_rate} %` : ''}</span>
                             </td>
                             <td className="py-2.5 pr-3">{l.warehouse}<span className="block text-xs text-gray-500">{l.region}</span></td>
@@ -500,6 +509,19 @@ const DashboardPage = () => {
           </Card>
         )}
 
+        {!loading && tab === 'livestock' && (
+          <LivestockOrdersPanel
+            orders={livestockOrders}
+            onStatus={async (id, status) => {
+              try {
+                await updateLivestockOrderStatus(id, status)
+                setLivestockOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)))
+              } catch (err) {
+                setError(err instanceof Error ? err.message : 'Mise à jour impossible.')
+              }
+            }}
+          />
+        )}
         {!loading && tab === 'messages' && <MessagesPanel />}
         {!loading && tab === 'team' && user?.role === 'admin' && <TeamPanel currentUser={user} />}
 

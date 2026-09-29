@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 const navItems = [
   { label: 'Accueil', to: '/' },
   { label: 'Nos activités', to: '/nos-activites' },
+  { label: 'Élevage', to: '/elevage' },
   { label: 'Nos semences', to: '/semences' },
   { label: 'Traçabilité', to: '/verifier-lot' },
   { label: 'Partenariats', to: '/partenariats' },

@@ -192,6 +192,22 @@ const routes: [method: string, pattern: RegExp, handler: Handler][] = [
     return { ok: true }
   }],
 
+  ['POST', /^livestock-orders$/, async ({ body }) => {
+    const date = str(body, 'wanted_date', { max: 10 })
+    if (!isDate(date)) throw new HttpError(400, 'Date invalide : wanted_date')
+    await run(
+      `insert into livestock_orders (id, product, product_option, quantity, frequency, customer_type, full_name, phone, address, delivery, wanted_date, message)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [randomUUID(), oneOf(str(body, 'product'), ['lait', 'poulet', 'oeufs'], 'product'), str(body, 'product_option', { max: 80 }),
+        num(body, 'quantity', { required: true, min: 1, max: 100_000 }),
+        oneOf(str(body, 'frequency'), ['unique', 'hebdomadaire', 'mensuelle'], 'frequency'),
+        oneOf(str(body, 'customer_type'), ['particulier', 'restaurant', 'boutique', 'collectivite', 'evenement'], 'customer_type'),
+        need(body, 'full_name', 150), need(body, 'phone', 30), need(body, 'address', 200),
+        oneOf(str(body, 'delivery'), ['livraison', 'retrait'], 'delivery'), date, str(body, 'message', { max: 2000 })],
+    )
+    return { ok: true }
+  }],
+
   ['GET', /^lots\/verify$/, async ({ query }) => {
     const lot = (query.get('lot') ?? '').trim()
     if (!lot) throw new HttpError(400, 'Numéro de lot manquant.')
@@ -306,6 +322,18 @@ const routes: [method: string, pattern: RegExp, handler: Handler][] = [
     await requireStaff(ctx)
     const status = oneOf(str(ctx.body, 'status'), ['nouvelle', 'en_cours', 'conclue', 'refusee'], 'status')
     await run('update partnership_requests set status = ? where id = ?', [status, ctx.params[0]])
+    return { ok: true }
+  }],
+
+  ['GET', /^livestock-orders$/, async (ctx) => {
+    await requireStaff(ctx)
+    return all('select * from livestock_orders order by created_at desc')
+  }],
+
+  ['PATCH', /^livestock-orders\/([\w-]+)$/, async (ctx) => {
+    await requireStaff(ctx)
+    const status = oneOf(str(ctx.body, 'status'), ['nouvelle', 'confirmee', 'livree', 'annulee'], 'status')
+    await run('update livestock_orders set status = ? where id = ?', [status, ctx.params[0]])
     return { ok: true }
   }],
 
