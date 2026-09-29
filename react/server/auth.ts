@@ -2,7 +2,7 @@
 import { createHmac, randomBytes, scrypt, timingSafeEqual } from 'node:crypto'
 import { promisify } from 'node:util'
 import type { IncomingMessage } from 'node:http'
-import { getSessionSecret, one } from './db'
+import { getSessionSecret, one } from './db.js'
 
 const scryptAsync = promisify(scrypt) as (password: string, salt: Buffer, keylen: number) => Promise<Buffer>
 

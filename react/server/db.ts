@@ -1,7 +1,7 @@
 // Base de données du site (SQLite via libSQL).
 // - En local : un simple fichier, react/data/africa-agro-sem.db (créé automatiquement).
 // - En ligne (Vercel) : une base Turso, via DATABASE_URL et DATABASE_AUTH_TOKEN.
-import { createClient, type Client, type InArgs } from '@libsql/client'
+import type { Client, InArgs } from '@libsql/client'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { randomBytes } from 'node:crypto'
@@ -100,21 +100,26 @@ const SCHEMA = [
 
 let clientPromise: Promise<Client> | null = null
 
-function createDbClient(): Client {
-  const url = process.env.DATABASE_URL
-  if (url) return createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN })
-  if (process.env.VERCEL) {
-    throw new ConfigError('Base de données non configurée : ajoutez DATABASE_URL et DATABASE_AUTH_TOKEN dans Vercel.')
+async function createDbClient(): Promise<Client> {
+  let url = process.env.DATABASE_URL
+  if (!url) {
+    if (process.env.VERCEL) {
+      throw new ConfigError('Base de données non configurée : ajoutez DATABASE_URL et DATABASE_AUTH_TOKEN dans Vercel.')
+    }
+    const dir = join(process.cwd(), 'data')
+    mkdirSync(dir, { recursive: true })
+    url = `file:${join(dir, 'africa-agro-sem.db').replace(/\\/g, '/')}`
   }
-  const dir = join(process.cwd(), 'data')
-  mkdirSync(dir, { recursive: true })
-  return createClient({ url: `file:${join(dir, 'africa-agro-sem.db').replace(/\\/g, '/')}` })
+  // Le client complet (module natif SQLite) n'est chargé que pour un fichier local ;
+  // une base distante (Turso, sur Vercel) passe par le client web, sans module natif.
+  const { createClient } = url.startsWith('file:') ? await import('@libsql/client') : await import('@libsql/client/web')
+  return createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN })
 }
 
 /** Client unique, avec le schéma créé au premier appel. */
 export function getDb(): Promise<Client> {
   clientPromise ??= (async () => {
-    const client = createDbClient()
+    const client = await createDbClient()
     await client.execute('pragma foreign_keys = on')
     await client.batch(SCHEMA, 'write')
     return client

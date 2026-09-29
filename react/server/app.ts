@@ -2,11 +2,11 @@
 // et par la fonction Vercel en ligne (api/handler.ts).
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { randomUUID } from 'node:crypto'
-import { ConfigError, all, getDb, one, run } from './db'
+import { ConfigError, all, getDb, one, run } from './db.js'
 import {
   clearSessionCookie, createSessionToken, getSessionUser, hashPassword, isLocalRequest,
   sessionCookie, verifyPassword, type SessionUser,
-} from './auth'
+} from './auth.js'
 
 class HttpError extends Error {
   constructor(public status: number, message: string) {
