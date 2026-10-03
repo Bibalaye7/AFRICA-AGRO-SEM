@@ -201,3 +201,39 @@ export const listLivestockOrders = () => api<LivestockOrder[]>('livestock-orders
 
 export const updateLivestockOrderStatus = (id: string, status: LivestockOrder['status']) =>
   api(`livestock-orders/${encodeURIComponent(id)}`, { method: 'PATCH', body: { status } }).then(() => undefined)
+
+// ---------- Commandes d'engrais ----------
+
+export type FertilizerOrder = {
+  id: string
+  created_at: string
+  items: { product: string; bags: number }[]
+  total_bags: number
+  customer_type: string
+  region: string
+  full_name: string
+  phone: string
+  address: string
+  delivery: 'livraison' | 'retrait'
+  wanted_date: string | null
+  message: string | null
+  status: 'nouvelle' | 'confirmee' | 'livree' | 'annulee'
+}
+
+export type NewFertilizerOrder = Omit<FertilizerOrder, 'id' | 'created_at' | 'status' | 'total_bags'>
+
+export function submitFertilizerOrder(input: NewFertilizerOrder, summary: string): Promise<void> {
+  return saveAndNotify(
+    api('fertilizer-orders', { method: 'POST', body: input }),
+    sendEmail({
+      from_name: `Commande engrais – ${input.full_name}`,
+      from_email: 'non renseigné (contact par téléphone)',
+      message: summary,
+    }),
+  )
+}
+
+export const listFertilizerOrders = () => api<FertilizerOrder[]>('fertilizer-orders')
+
+export const updateFertilizerOrderStatus = (id: string, status: FertilizerOrder['status']) =>
+  api(`fertilizer-orders/${encodeURIComponent(id)}`, { method: 'PATCH', body: { status } }).then(() => undefined)

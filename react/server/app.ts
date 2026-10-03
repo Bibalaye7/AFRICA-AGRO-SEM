@@ -21,6 +21,11 @@ type Handler = (ctx: Ctx) => Promise<unknown>
 // ---------- Validation ----------
 
 const SPECIES = ['arachide', 'mais', 'niebe', 'mil', 'sorgho']
+// Identifiants du catalogue src/data/fertilizers.ts
+const FERTILIZER_IDS = [
+  'npk-6-20-10', 'npk-15-10-10', 'npk-15-15-15', 'dap-18-46-0', 'uree-46', 'sulfate-ammonium', 'tsp-0-46-0',
+  'phosphate-naturel', 'kcl-0-0-60', 'npk-10-10-20', 'sulfate-potasse', 'foliaire-20-20-20', 'compost', 'fiente-volaille',
+]
 
 function str(body: Record<string, unknown>, key: string, opts: { required?: boolean; max?: number } = {}): string | null {
   const v = body[key]
@@ -208,6 +213,27 @@ const routes: [method: string, pattern: RegExp, handler: Handler][] = [
     return { ok: true }
   }],
 
+  ['POST', /^fertilizer-orders$/, async ({ body }) => {
+    const raw = body.items
+    if (!Array.isArray(raw) || raw.length === 0 || raw.length > 20) throw new HttpError(400, 'Valeur invalide : items')
+    const items = raw.map((it) => {
+      const item = (it ?? {}) as Record<string, unknown>
+      return {
+        product: oneOf(str(item, 'product'), FERTILIZER_IDS, 'items.product'),
+        bags: Math.round(num(item, 'bags', { required: true, min: 1, max: 100_000 })!),
+      }
+    })
+    await run(
+      `insert into fertilizer_orders (id, items, total_bags, customer_type, region, full_name, phone, address, delivery, wanted_date, message)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [randomUUID(), JSON.stringify(items), items.reduce((s, i) => s + i.bags, 0),
+        oneOf(str(body, 'customer_type'), ['producteur', 'groupement', 'revendeur', 'entreprise'], 'customer_type'),
+        need(body, 'region', 60), need(body, 'full_name', 150), need(body, 'phone', 30), need(body, 'address', 200),
+        oneOf(str(body, 'delivery'), ['livraison', 'retrait'], 'delivery'), date(body, 'wanted_date'), str(body, 'message', { max: 2000 })],
+    )
+    return { ok: true }
+  }],
+
   ['GET', /^lots\/verify$/, async ({ query }) => {
     const lot = (query.get('lot') ?? '').trim()
     if (!lot) throw new HttpError(400, 'Numéro de lot manquant.')
@@ -334,6 +360,19 @@ const routes: [method: string, pattern: RegExp, handler: Handler][] = [
     await requireStaff(ctx)
     const status = oneOf(str(ctx.body, 'status'), ['nouvelle', 'confirmee', 'livree', 'annulee'], 'status')
     await run('update livestock_orders set status = ? where id = ?', [status, ctx.params[0]])
+    return { ok: true }
+  }],
+
+  ['GET', /^fertilizer-orders$/, async (ctx) => {
+    await requireStaff(ctx)
+    const rows = await all<Record<string, unknown> & { items: string }>('select * from fertilizer_orders order by created_at desc')
+    return rows.map((r) => ({ ...r, items: JSON.parse(r.items) }))
+  }],
+
+  ['PATCH', /^fertilizer-orders\/([\w-]+)$/, async (ctx) => {
+    await requireStaff(ctx)
+    const status = oneOf(str(ctx.body, 'status'), ['nouvelle', 'confirmee', 'livree', 'annulee'], 'status')
+    await run('update fertilizer_orders set status = ? where id = ?', [status, ctx.params[0]])
     return { ok: true }
   }],
 

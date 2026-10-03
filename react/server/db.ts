@@ -105,6 +105,21 @@ const SCHEMA = [
     status text not null default 'nouvelle' check (status in ('nouvelle', 'confirmee', 'livree', 'annulee')),
     created_at text not null default (datetime('now'))
   )`,
+  `create table if not exists fertilizer_orders (
+    id text primary key,
+    items text not null,
+    total_bags real not null check (total_bags > 0),
+    customer_type text not null,
+    region text not null,
+    full_name text not null,
+    phone text not null,
+    address text not null,
+    delivery text not null default 'livraison' check (delivery in ('livraison', 'retrait')),
+    wanted_date text,
+    message text,
+    status text not null default 'nouvelle' check (status in ('nouvelle', 'confirmee', 'livree', 'annulee')),
+    created_at text not null default (datetime('now'))
+  )`,
   `create table if not exists contact_messages (
     id text primary key,
     name text not null,

@@ -6,6 +6,7 @@ const links = [
   { label: 'Nos activités', to: '/nos-activites' },
   { label: 'Élevage', to: '/elevage' },
   { label: 'Nos semences', to: '/semences' },
+  { label: 'Engrais', to: '/engrais' },
   { label: 'Réserver', to: '/#reservation' },
   { label: 'Vérifier un lot', to: '/verifier-lot' },
   { label: 'Partenariats', to: '/partenariats' },

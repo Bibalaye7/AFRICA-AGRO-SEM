@@ -1,8 +1,9 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { api } from '../../lib/api'
 import type { User } from '../../contexts/AuthContext'
-import type { LivestockOrder } from '../../lib/campaignStore'
+import type { FertilizerOrder, LivestockOrder } from '../../lib/campaignStore'
 import { CUSTOMER_TYPES, productName } from '../../data/livestock'
+import { BAG_KG, FERTILIZER_CUSTOMER_TYPES, fertilizerName } from '../../data/fertilizers'
 
 type ContactMessage = { id: string; name: string; email: string; message: string; created_at: string }
 type TeamMember = User & { created_at: string }
@@ -269,5 +270,97 @@ export function LivestockOrdersPanel({ orders, onStatus }: { orders: LivestockOr
         {shown.length === 0 && <p className="text-center text-gray-500 py-8">Aucune commande pour le moment. Elles arrivent ici depuis la page « Élevage » du site.</p>}
       </div>
     </Panel>
+  )
+}
+
+// ---------- Commandes d'engrais ----------
+
+export function FertilizerOrdersPanel({ orders, onStatus }: { orders: FertilizerOrder[]; onStatus: (id: string, status: FertilizerOrder['status']) => void }) {
+  const [region, setRegion] = useState('')
+  const regions = [...new Set(orders.map((o) => o.region))].sort()
+  const shown = orders.filter((o) => !region || o.region === region)
+
+  // Sacs à préparer : commandes nouvelles ou confirmées, pas encore livrées.
+  const toPrepare = new Map<string, number>()
+  for (const o of shown) {
+    if (o.status !== 'nouvelle' && o.status !== 'confirmee') continue
+    for (const i of o.items) toPrepare.set(i.product, (toPrepare.get(i.product) ?? 0) + i.bags)
+  }
+  const prepareRows = [...toPrepare.entries()].sort((a, b) => b[1] - a[1])
+
+  return (
+    <div className="space-y-6">
+      <Panel title="Sacs à préparer (commandes nouvelles et confirmées)">
+        {prepareRows.length === 0 ? (
+          <p className="text-sm text-gray-500">Aucun sac à préparer pour le moment.</p>
+        ) : (
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {prepareRows.map(([product, bags]) => (
+              <li key={product} className="rounded-xl bg-green-50 p-4">
+                <p className="text-sm text-gray-600">{fertilizerName(product)}</p>
+                <p className="text-2xl font-bold text-agro-green tabular-nums">{bags} sacs</p>
+                <p className="text-xs text-gray-500 tabular-nums">{((bags * BAG_KG) / 1000).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} t</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
+
+      <Panel title={`Commandes engrais (${orders.length})`}>
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <label htmlFor="fo-region" className="text-sm text-gray-600">Région</label>
+          <select id="fo-region" value={region} onChange={(e) => setRegion(e.target.value)} className="rounded-lg border border-gray-300 px-2 py-1.5 text-sm bg-white">
+            <option value="">Toutes</option>
+            {regions.map((r) => <option key={r}>{r}</option>)}
+          </select>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-gray-500 border-b">
+                <th className="py-2 pr-3 font-medium">Reçue le</th>
+                <th className="py-2 pr-3 font-medium">Client</th>
+                <th className="py-2 pr-3 font-medium">Engrais</th>
+                <th className="py-2 pr-3 font-medium">Réception</th>
+                <th className="py-2 font-medium">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map((o) => (
+                <tr key={o.id} className="border-b last:border-0 align-top">
+                  <td className="py-2.5 pr-3 whitespace-nowrap tabular-nums">{fmtDate(o.created_at)}</td>
+                  <td className="py-2.5 pr-3">
+                    <span className="font-medium text-gray-900">{o.full_name}</span>
+                    <a href={`tel:${o.phone}`} className="block text-xs text-agro-green">{o.phone}</a>
+                    <span className="block text-xs text-gray-500">{FERTILIZER_CUSTOMER_TYPES.find((c) => c.id === o.customer_type)?.label ?? o.customer_type}</span>
+                  </td>
+                  <td className="py-2.5 pr-3">
+                    {o.items.map((i) => <span key={i.product} className="block">{i.bags} × {fertilizerName(i.product)}</span>)}
+                    <strong className="block text-xs text-gray-700 mt-0.5">Total : {o.total_bags} sacs</strong>
+                    {o.message && <span className="block text-xs text-gray-500 max-w-xs">{o.message}</span>}
+                  </td>
+                  <td className="py-2.5 pr-3">
+                    {o.delivery === 'livraison' ? 'Livraison' : 'Retrait au magasin'}
+                    <span className="block text-xs text-gray-500">{o.region} – {o.address}</span>
+                    {o.wanted_date && <span className="block text-xs text-gray-500">Pour le {new Date(o.wanted_date).toLocaleDateString('fr-FR')}</span>}
+                  </td>
+                  <td className="py-2.5">
+                    <select
+                      aria-label={`Statut de la commande de ${o.full_name}`}
+                      value={o.status}
+                      onChange={(e) => onStatus(o.id, e.target.value as FertilizerOrder['status'])}
+                      className="rounded-lg border border-gray-300 px-2 py-1.5 text-sm bg-white"
+                    >
+                      {Object.entries(orderStatusLabels).map(([v, label]) => <option key={v} value={v}>{label}</option>)}
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {shown.length === 0 && <p className="text-center text-gray-500 py-8">Aucune commande pour le moment. Elles arrivent ici depuis la page « Engrais » du site.</p>}
+        </div>
+      </Panel>
+    </div>
   )
 }

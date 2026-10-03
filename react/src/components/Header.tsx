@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Nos activités', to: '/nos-activites' },
   { label: 'Élevage', to: '/elevage' },
   { label: 'Nos semences', to: '/semences' },
+  { label: 'Engrais', to: '/engrais' },
   { label: 'Traçabilité', to: '/verifier-lot' },
   { label: 'Partenariats', to: '/partenariats' },
   { label: 'À propos', to: '/a-propos' },
@@ -62,7 +63,7 @@ const Header = () => {
             <img src="/les_logos/logo-blanc.jpg" alt="Africa Agro Sem" className="h-12 md:h-14 w-auto" />
           </Link>
 
-          <div className="hidden xl:flex items-center gap-7 flex-1 justify-center">
+          <div className="hidden xl:flex items-center gap-5 2xl:gap-7 flex-1 justify-center">
             {navItems.map((item) =>
               item.to.includes('#') ? (
                 <Link key={item.label} to={item.to} onClick={() => handleHashClick(item.to)} className={linkClass({ isActive: false })}>

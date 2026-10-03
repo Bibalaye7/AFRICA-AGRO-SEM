@@ -6,19 +6,21 @@ import {
   createCampaign, createDistribution, createLot, deleteDistribution, listCampaigns, listPartnerships,
   listReservations, loadCampaignData, updatePartnershipStatus, updateReservationStatus,
   listLivestockOrders, updateLivestockOrderStatus, type LivestockOrder,
+  listFertilizerOrders, updateFertilizerOrderStatus, type FertilizerOrder,
   type Campaign, type Distribution, type PartnershipRequest, type Reservation, type SeedLot,
 } from '../lib/campaignStore'
 import { CumulativeChart, HorizontalBars, ProgressBars, formatTonnes } from '../components/dashboard/charts'
 import { CampaignForm, DistributionForm, LotForm, Modal } from '../components/dashboard/forms'
-import { LivestockOrdersPanel, MessagesPanel, PasswordForm, TeamPanel } from '../components/dashboard/panels'
+import { FertilizerOrdersPanel, LivestockOrdersPanel, MessagesPanel, PasswordForm, TeamPanel } from '../components/dashboard/panels'
 
-type Tab = 'overview' | 'distributions' | 'lots' | 'reservations' | 'livestock' | 'partnerships' | 'messages' | 'team'
+type Tab = 'overview' | 'distributions' | 'lots' | 'reservations' | 'fertilizer' | 'livestock' | 'partnerships' | 'messages' | 'team'
 
 const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: 'overview', label: 'Vue d’ensemble', icon: 'fa-chart-pie' },
   { id: 'distributions', label: 'Distributions', icon: 'fa-truck-ramp-box' },
   { id: 'lots', label: 'Stocks et lots', icon: 'fa-warehouse' },
   { id: 'reservations', label: 'Réservations', icon: 'fa-calendar-check' },
+  { id: 'fertilizer', label: 'Commandes engrais', icon: 'fa-flask' },
   { id: 'livestock', label: 'Commandes élevage', icon: 'fa-cow' },
   { id: 'partnerships', label: 'Partenariats', icon: 'fa-handshake' },
   { id: 'messages', label: 'Messages', icon: 'fa-envelope' },
@@ -64,6 +66,7 @@ const DashboardPage = () => {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [partnerships, setPartnerships] = useState<PartnershipRequest[]>([])
   const [livestockOrders, setLivestockOrders] = useState<LivestockOrder[]>([])
+  const [fertilizerOrders, setFertilizerOrders] = useState<FertilizerOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [modal, setModal] = useState<'campaign' | 'lot' | 'distribution' | 'password' | null>(null)
@@ -74,8 +77,9 @@ const DashboardPage = () => {
     setLoading(true)
     setError('')
     try {
-      const [cs, rs, ps, lo] = await Promise.all([listCampaigns(), listReservations(), listPartnerships(), listLivestockOrders()])
+      const [cs, rs, ps, lo, fo] = await Promise.all([listCampaigns(), listReservations(), listPartnerships(), listLivestockOrders(), listFertilizerOrders()])
       setLivestockOrders(lo)
+      setFertilizerOrders(fo)
       setCampaigns(cs)
       setReservations(rs)
       setPartnerships(ps)
@@ -104,6 +108,7 @@ const DashboardPage = () => {
   useEffect(() => {
     if (tab === 'reservations') listReservations().then(setReservations, (err) => setError(err.message))
     if (tab === 'partnerships') listPartnerships().then(setPartnerships, (err) => setError(err.message))
+    if (tab === 'fertilizer') listFertilizerOrders().then(setFertilizerOrders, (err) => setError(err.message))
     if (tab === 'livestock') listLivestockOrders().then(setLivestockOrders, (err) => setError(err.message))
   }, [tab])
 
@@ -244,6 +249,7 @@ const DashboardPage = () => {
             const badge =
               t.id === 'reservations' ? newReservations
               : t.id === 'partnerships' ? newPartnerships
+              : t.id === 'fertilizer' ? fertilizerOrders.filter((o) => o.status === 'nouvelle').length
               : t.id === 'livestock' ? livestockOrders.filter((o) => o.status === 'nouvelle').length
               : 0
             return (
@@ -509,6 +515,19 @@ const DashboardPage = () => {
           </Card>
         )}
 
+        {!loading && tab === 'fertilizer' && (
+          <FertilizerOrdersPanel
+            orders={fertilizerOrders}
+            onStatus={async (id, status) => {
+              try {
+                await updateFertilizerOrderStatus(id, status)
+                setFertilizerOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)))
+              } catch (err) {
+                setError(err instanceof Error ? err.message : 'Mise à jour impossible.')
+              }
+            }}
+          />
+        )}
         {!loading && tab === 'livestock' && (
           <LivestockOrdersPanel
             orders={livestockOrders}
